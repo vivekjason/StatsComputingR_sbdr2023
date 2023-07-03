@@ -1,5 +1,6 @@
 project:
   type: website
+  output-dir: docs
 
 website:
   title: "Statistical Computing in R 2023"
@@ -46,7 +47,7 @@ website:
         href: https://twitter.com/vivekjason87
       - icon: rss
         href: index.xml
-
+    
 format:
   html:
     theme: minty

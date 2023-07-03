@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Vivek Jason">
 
-<title>Statistical Computing in R 2023 - Practical session 2: R-tistic Insights- Visualising your data in R</title>
+<title>Statistical Computing in R 2023 - About</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -24,22 +23,22 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -61,7 +60,7 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="styles.css">
 </head>
 
 <body class="nav-fixed">
@@ -71,7 +70,7 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Statistical Computing in R 2023</span>
     </a>
   </div>
@@ -81,29 +80,29 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../index.html">Home</a>
+    <a class="nav-link" href="./index.html">Home</a>
   </li>  
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-lectures" role="button" data-bs-toggle="dropdown" aria-expanded="false">Lectures</a>
     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-lectures">    
         <li>
-    <a class="dropdown-item" href="//lectures/introduction_R.html">
+    <a class="dropdown-item" href="./introduction_R.html">
  <span class="dropdown-text">Introduction</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="//lectures/data_wranggling.html">
+    <a class="dropdown-item" href="./data_wranggling.html">
  <span class="dropdown-text">Data Wranggling</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="//lectures/data_viz.html">
- <span class="dropdown-text">Data Visulisation</span></a>
+    <a class="dropdown-item" href="./data_viz.html">
+ <span class="dropdown-text">Data Visualisation</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="//lectures/inferential_stats.html">
+    <a class="dropdown-item" href="./inferential_stats.html">
  <span class="dropdown-text">Inferential Statistics</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="//lectures/regression.html">
+    <a class="dropdown-item" href="./regression.html">
  <span class="dropdown-text">Regression</span></a>
   </li>  
     </ul>
@@ -112,19 +111,19 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tutorials" role="button" data-bs-toggle="dropdown" aria-expanded="false">Tutorials</a>
     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-tutorials">    
         <li>
-    <a class="dropdown-item" href="//tutorials/data_wranggling_tutorial.html">
+    <a class="dropdown-item" href="./data_wranggling_tutorial.html">
  <span class="dropdown-text">Data Wranggling</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="//tutorials/data_viz_tutorial.html">
- <span class="dropdown-text">Data Visulisation</span></a>
+    <a class="dropdown-item" href="./data_viz_tutorial.html">
+ <span class="dropdown-text">Data Visualisation</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="//tutorials/inferential_stats_tutorial.html">
+    <a class="dropdown-item" href="./inferential_stats_tutorial.html">
  <span class="dropdown-text">Inferential Statistics</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="//tutorials/regression_tutorial.html">
+    <a class="dropdown-item" href="./regression_tutorial.html">
  <span class="dropdown-text">Regression</span></a>
   </li>  
     </ul>
@@ -133,19 +132,19 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-solutions" role="button" data-bs-toggle="dropdown" aria-expanded="false">Solutions</a>
     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-solutions">    
         <li>
-    <a class="dropdown-item" href="//solutions/data_wranggling_solutions.html">
+    <a class="dropdown-item" href="./data_wranggling_solutions.html">
  <span class="dropdown-text">Data Wranggling</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="//solutions/data_viz_solutions.html">
- <span class="dropdown-text">Data Visulisation</span></a>
+    <a class="dropdown-item" href="./data_viz_solutions.html">
+ <span class="dropdown-text">Data Visualisation</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="//solutions/inferential_stats_solutions.html">
+    <a class="dropdown-item" href="./inferential_stats_solutions.html">
  <span class="dropdown-text">Inferential Statistics</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="//solutions/regression_solutions.html">
+    <a class="dropdown-item" href="./regression_solutions.html">
  <span class="dropdown-text">Regression</span></a>
   </li>  
     </ul>
@@ -161,7 +160,7 @@ ul.task-list li input[type="checkbox"] {
  </a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="../index.xml"><i class="bi bi-rss" role="img">
+    <a class="nav-link" href="./index.xml"><i class="bi bi-rss" role="img">
 </i> 
  </a>
   </li>  
@@ -180,7 +179,10 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#covid-19-vaccinations-and-death-in-malaysia" id="toc-covid-19-vaccinations-and-death-in-malaysia" class="nav-link active" data-scroll-target="#covid-19-vaccinations-and-death-in-malaysia">COVID-19 Vaccinations and Death in Malaysia</a></li>
+  <li><a href="#welcome-to-statistical-computing-in-r" id="toc-welcome-to-statistical-computing-in-r" class="nav-link active" data-scroll-target="#welcome-to-statistical-computing-in-r"><strong>Welcome to Statistical Computing in R!</strong></a>
+  <ul class="collapse">
+  <li><a href="#what-is-this-workshop" id="toc-what-is-this-workshop" class="nav-link" data-scroll-target="#what-is-this-workshop"><strong>What is this workshop?</strong></a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -189,19 +191,13 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Practical session 2: R-tistic Insights- Visualising your data in R</h1>
+<h1 class="title">About</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Vivek Jason </p>
-          </div>
-  </div>
     
     
   </div>
@@ -209,58 +205,17 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<section id="covid-19-vaccinations-and-death-in-malaysia" class="level3">
-<h3 class="anchored" data-anchor-id="covid-19-vaccinations-and-death-in-malaysia">COVID-19 Vaccinations and Death in Malaysia</h3>
-<section id="task-1-scatterplots" class="level4">
-<h4 class="anchored" data-anchor-id="task-1-scatterplots">Task 1: Scatterplots</h4>
-<ol type="1">
-<li><p>Call the data in</p></li>
-<li><p>Create a new variable <code>vaccinated</code> that indicates if an individual is fully vaccinated (dose2) or not. (Tip: use <code>mutate</code> and <code>ifelse</code>)</p></li>
-<li><p>Plot a scatterplot showing the relationship between <code>age</code> and <code>date</code>. Use the new variable <code>vaccinated</code> variable to color the points using the colour hex <code>#1369FF</code> and <code>#00B556</code>. (Tip: Use the command <code>scale_colour_manual</code>)</p></li>
-<li><p>Next try using the <code>date_dose3</code> instead of date. Anything interesting?</p></li>
-</ol>
-</section>
-<section id="task-2-line-chart" class="level4">
-<h4 class="anchored" data-anchor-id="task-2-line-chart">Task 2: Line Chart</h4>
-<ol type="1">
-<li><p>Create a line chart to represent the cumulative number of vaccinations by dose over time.</p></li>
-<li><p>Select all the <code>date_doseX</code>, and <code>state</code></p></li>
-<li><p>Pivot the data into long form (Tip: use the <code>pivot_long</code> function) and count the number of dose given on each date</p></li>
-<li><p>Complete the series of dates using <code>complete</code></p></li>
-<li><p>Plot the the different doses by date across time and facet by <code>state</code></p></li>
-<li><p>Colour <code>date_dose3</code>= <code>#A3D2D5</code>. Maintain the other 2 colours.</p></li>
-<li><p>Apply a pre-set theme</p></li>
-</ol>
-</section>
-<section id="task-3-boxplot" class="level4">
-<h4 class="anchored" data-anchor-id="task-3-boxplot">Task 3: Boxplot</h4>
-<ol type="1">
-<li><p>Call data in</p></li>
-<li><p>Replace all empty cells with NA in column <code>brand2</code></p></li>
-<li><p>Group by <code>state</code> and <code>brand2</code> and summarise the number of groups in each <code>brand</code>, <code>state</code></p></li>
-<li><p>Plot a box plot on the distribution of deaths by brand2</p></li>
-<li><p>Title should be “Number of Deaths by Vaccine Brand and Date” with x-axis labels of “Vaccine Brand” and y-axis labels of “Number of Deaths” (Tip: Use <code>labs</code>)</p></li>
-</ol>
-</section>
-<section id="task-4-bar-chart" class="level4">
-<h4 class="anchored" data-anchor-id="task-4-bar-chart">Task 4: Bar chart</h4>
-<ol type="1">
-<li><p>Call in data</p></li>
-<li><p>Select on <code>state</code>, <code>malaysian</code>, <code>bid</code></p></li>
-<li><p>Factorise the variable</p></li>
-<li><p>Build a grouped bar chart by <code>state</code> and <code>bid</code> status</p></li>
-<li><p>Facet wrap by <code>malaysian</code></p></li>
-<li><p>Title should be “Deaths by State, Brought-in-Dead Status, and Malaysian Status” with x-axis labels of “State” and y-axis labels of “Number of Deaths”. Legend label should be “Brought-in-Dead Status”.</p></li>
-<li><p>Apply theme_minimal and adjust the x-axis text to be perpendicular (90 degrees) to the axis (Tip: Use <code>theme (axis.text.x=element_text())</code>)</p></li>
-<li><p>What should you change to transform this into a stacked bar chart?</p></li>
-</ol>
-</section>
-<section id="task-5-save-plots" class="level4">
-<h4 class="anchored" data-anchor-id="task-5-save-plots">Task 5: Save plots</h4>
-<ol type="1">
-<li><p>Easy peasy lemon squesy- just save all of the above 4 plots. (Tip: use <code>ggsave()</code>)</p></li>
-<li><p>How can we change output format, quality, size</p></li>
-</ol>
+<section id="welcome-to-statistical-computing-in-r" class="level1">
+<h1><strong>Welcome to Statistical Computing in R!</strong></h1>
+<p>Welcome to the <strong>Statistical Computing in R! for Beginners to Intermediates</strong> organised by the Sector for Biostatistics and Data Repository, National Institutes of Health, Malaysia</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/banner.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+<section id="what-is-this-workshop" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-this-workshop"><strong>What is this workshop?</strong></h2>
+<p>This workshop lays the groundwork for addressing key practical aspects of programming and other essential computer skills needed for both research and implementation of statistical methods. The course offers an introduction to programming in R and the tidyverse, guidance on coding best practices, a primer on data visualization and data wrangling, as well as an exploration of both descriptive and inferential statistics using R. Additionally, the workshop also introduces the concept of regression analysis in R.</p>
 
 
 </section>
