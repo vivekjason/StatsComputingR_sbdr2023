@@ -1,0 +1,550 @@
+---
+title: "Powering up! Descriptive Statistics and Inferential Tests"
+format: 
+  html:
+    theme: minty
+    toc: true
+    toc_float: true
+editor: visual
+---
+
+![](/images/banner.png)
+
+Descriptive and inferential statistics form the bedrock of any complex analysis. Descriptive statistics summarize raw data and provide a snapshot of the sample's features, revealing trends, patterns, and distributions, essential for making the data comprehensible. Inferential statistics allow for conclusions or predictions about a larger population from the sampled data, providing the necessary basis for hypothesis testing. Together, they provide an initial understanding of data, and an informed context for the application of more complex statistical or machine learning techniques.
+
+![](/images/uncertainty.jpg){fig-align="center"}
+
+As we mentioned in the Introduction- there are many ways to skin a cat in R.
+
+### `tidyverse()` for Describing data
+
+As we learned yesterday- the tidyverse has revolutionised data wranggling and can be extended likewise into the realm of descriptive statistics. Creating tables with **dplyr** functions [`summarise()`](https://dplyr.tidyverse.org/reference/summarise.html) and [`count()`](https://dplyr.tidyverse.org/reference/count.html) is a useful approach to calculating summary statistics, summarize *by group*, or pass tables to [`ggplot()`](https://ggplot2.tidyverse.org/reference/ggplot.html) or `flextable()`. In yesterdays tutorial we briefly did visit this, but we will extend on this in the next 10 minutes or so before transitioning into a simpler more efficient way of describing data in R.
+
+Lets get some important packages loaded
+
+```{r, results=FALSE, warning=FALSE}
+required_packages <- c("tidyverse", "lubridate", "gtsummary", "rstatix", "janitor", "corrr")
+not_installed <- required_packages[!(required_packages %in% installed.packages()[ , "Package"])]    
+if(length(not_installed)) install.packages(not_installed)                                           
+suppressWarnings(lapply(required_packages, require, character.only = TRUE))
+
+```
+
+#### Importing some data
+
+Lets call in the data:
+
+```{r}
+c19_df <- read.csv("https://raw.githubusercontent.com/MoH-Malaysia/covid19-public/main/epidemic/linelist/linelist_deaths.csv")
+```
+
+Just to be consistent we what I said yesterday- before diving into the data always always skim the data first to get a quick feels
+
+```{r}
+c19_df %>% 
+  skimr::skim()
+```
+
+#### **Get counts**
+
+The most simple function to apply within [`summarise()`](https://dplyr.tidyverse.org/reference/summarise.html) is [`n()`](https://dplyr.tidyverse.org/reference/context.html). Leave the parentheses empty to count the number of rows. You may have seen this being used several times yesterday. Let
+
+```{r}
+c19_df %>%                 # begin with linelist
+  summarise(n_rows = n())    # return new summary dataframe with column n_rows
+```
+
+Lets try and stratify that by nationality and BID status:
+
+```{r}
+c19_df %>% 
+  group_by(malaysian, bid) %>%     # group data by unique values in column age_cat
+  summarise(n_rows = n())   # return number of rows *per group*
+```
+
+The above command can be shortened by using the [`count()`](https://dplyr.tidyverse.org/reference/count.html) function instead. [`count()`](https://dplyr.tidyverse.org/reference/count.html) does the following:
+
+1.  Groups the data by the columns provided to it
+
+2.  Summarises them with [`n()`](https://dplyr.tidyverse.org/reference/context.html) (creating column `n`)
+
+3.  Un-groups the data
+
+```{r}
+c19_df %>%
+  count(malaysian, bid)
+```
+
+#### **Proportions**
+
+Proportions can be added by piping the table to [`mutate()`](https://dplyr.tidyverse.org/reference/mutate.html) to create a new column. Define the new column as the counts column (`n` by default) divided by the [`sum()`](https://rdrr.io/r/base/sum.html) of the counts column (this will return a proportion).
+
+```{r}
+bid_summary <- c19_df %>% 
+  count(malaysian, bid) %>%                     # group and count by gender (produces "n" column)
+  mutate(                                # create percent of column - note the denominator
+    percent = round((n / sum(n))*100,2)) 
+
+# print
+bid_summary
+```
+
+::: callout-tip
+Using these structure we can very easily modify these summary statistics using `ggplot()` or html tables `kable()` or presentation ready tables using `flextable()` (flextable is not covered in this course but you can check it out [here](https://ardata-fr.github.io/flextable-book/)). An example of a plot is as follows:
+
+```{r}
+c19_df %>% 
+  count(malaysian, bid) %>%                     
+  mutate(percent = round((n / sum(n))*100,2)) %>%     
+  ggplot()+                       # pass new data frame to ggplot
+    geom_col(                     # create bar plot
+      mapping = aes(   
+        x = malaysian,            # map outcome to x-axis
+        fill = bid,               # map age_cat to the fill
+        y = percent))             # map the counts column `n` to the height
+```
+
+Or a nice little table summary:
+
+```{r}
+c19_df %>% 
+  count(malaysian, bid) %>%
+  mutate(malaysian = factor(malaysian,
+                               levels=c("0","1"),
+                               labels=c("non-Malaysian", "Malaysian")),
+         bid = factor(bid,
+                               levels=c("0","1"),
+                               labels=c("Hospital", "BID")),) %>%
+  mutate(percent = round((n / sum(n))*100,2))%>%
+  knitr::kable(format="html", caption = "COVID-19 fatalities by Nationality and Place of Death",) %>% kableExtra::kable_minimal()
+```
+:::
+
+#### **Summary statistics**
+
+One major advantage of **dplyr** and [`summarise()`](https://dplyr.tidyverse.org/reference/summarise.html) is the ability to return more advanced statistical summaries like [`median()`](https://rdrr.io/r/stats/median.html), [`mean()`](https://rdrr.io/r/base/mean.html), [`max()`](https://rdrr.io/r/base/Extremes.html), [`min()`](https://rdrr.io/r/base/Extremes.html), [`sd()`](https://rdrr.io/r/stats/sd.html) (standard deviation), and percentiles. You can also use [`sum()`](https://rdrr.io/r/base/sum.html) to return the number of rows that meet certain logical criteria. As above, these outputs can be produced for the whole data frame set, or by group.
+
+The syntax is the same - within the [`summarise()`](https://dplyr.tidyverse.org/reference/summarise.html) parentheses you provide the names of each new summary column followed by an equals sign and a statistical function to apply. Within the statistical function, give the column(s) to be operated on and any relevant arguments (e.g. `na.rm = TRUE` for most mathematical functions).
+
+You can also use [`sum()`](https://rdrr.io/r/base/sum.html) to return the number of rows that meet a logical criteria. The expression within is counted if it evaluates to `TRUE`. For example:
+
+-   `sum(age_years < 18, na.rm=T)`\
+
+-   `sum(gender == "male", na.rm=T)`\
+
+-   `sum(response %in% c("Likely", "Very Likely"))`
+
+Below, `c19_df` data are summarised to describe the days delay from death to announcement (column `days_death_state`), by state.
+
+```{r}
+c19_df %>%                 # begin with linelist, save out as new object
+  group_by(state) %>%      # group all calculations by hospital
+  mutate(across(contains("date"), ~as.Date(., format = "%Y-%m-%d")), #change character to dates\ fromat
+         days_death_state=date_announced-date) %>% # calculate the delay for each death
+  summarise(                                                         # only the below summary columns will be returned
+    deaths       = n(),                                                # number of rows per group
+    delay_max   = max(days_death_state, na.rm = T),                    # max delay
+    delay_mean  = round(mean(days_death_state, na.rm=T), digits = 1),  # mean delay, rounded
+    delay_sd    = round(sd(days_death_state, na.rm = T), digits = 1),  # standard deviation of delays, rounded
+    delay_3     = sum(days_death_state >= 3, na.rm = T),               # number of rows with delay of 3 or more days
+    pct_delay_3 = scales::percent(delay_3 / deaths)                    # convert previously-defined delay column to percent (scales gives the % sign behind)
+  )
+```
+
+::: callout-tip
+-   Use [`sum()`](https://rdrr.io/r/base/sum.html) with a logic statement to "count" rows that meet certain criteria (`==`)\
+
+-   Note the use of `na.rm = TRUE` within mathematical functions like [`sum()`](https://rdrr.io/r/base/sum.html), otherwise `NA` will be returned if there are any missing values\
+
+-   Use the function `percent()` from the **scales** package to easily convert to percents
+
+    -   Set `accuracy =` to 0.1 or 0.01 to ensure 1 or 2 decimal places respectively\
+
+-   Use [`round()`](https://rdrr.io/r/base/Round.html) from **base** R to specify decimals\
+
+-   To calculate these statistics on the entire dataset, use [`summarise()`](https://dplyr.tidyverse.org/reference/summarise.html) without [`group_by()`](https://dplyr.tidyverse.org/reference/group_by.html)\
+
+-   You may create columns for the purposes of later calculations (e.g. denominators) that you eventually drop from your data frame with [`select()`](https://dplyr.tidyverse.org/reference/select.html).
+:::
+
+#### **Conditional statistics**
+
+You may want to return *conditional statistics* - e.g. the maximum of rows that meet certain criteria. This can be done by subsetting the column with brackets `[ ]`.
+
+```{r}
+c19_df %>% 
+  group_by(state) %>% 
+  summarise(
+    max_age_msian = median(age[malaysian == "1"], na.rm = T),
+    max_age_non_msian = median(age[malaysian == "0"], na.rm = T)
+  )
+```
+
+#### **Percentiles**
+
+*Percentiles* and quantiles in **dplyr** deserve a special mention. To return quantiles, use [`quantile()`](https://rdrr.io/r/stats/quantile.html) with the defaults or specify the value(s) you would like with `probs =`.
+
+```{r}
+# get default percentile values of age (0%, 25%, 50%, 75%, 100%)
+c19_df %>% 
+  summarise(age_percentiles = quantile(age, na.rm = TRUE))
+```
+
+Or manually defined percentiles that are grouped
+
+```{r}
+# get manually-specified percentile values of age (5%, 50%, 75%, 98%)
+c19_df %>% 
+  group_by(malaysian) %>%
+  summarise(
+    age_percentiles = quantile(
+      age,
+      probs = c(.05, 0.5, 0.75, 0.98), 
+      na.rm=TRUE)
+    ) 
+```
+
+::: callout-tip
+Do keep in mind that there any many ways to skin the cat! And always there will be more efficient ways to do things as you progress through R- Here is an example from the `rstatix` package
+
+```{r}
+c19_df %>% 
+  group_by(malaysian) %>%
+  rstatix::get_summary_stats(age, type = "quantile")
+```
+:::
+
+#### **`across()` multiple columns**
+
+You can use [`summarise()`](https://dplyr.tidyverse.org/reference/summarise.html) across multiple columns using [`across()`](https://dplyr.tidyverse.org/reference/across.html). This makes life easier when you want to calculate the same statistics for many columns. Place [`across()`](https://dplyr.tidyverse.org/reference/across.html) within [`summarise()`](https://dplyr.tidyverse.org/reference/summarise.html) and specify the following:
+
+-   `.cols =` as either a vector of column names [`c()`](https://rdrr.io/r/base/c.html) or "tidyselect" helper functions (explained below)\
+
+-   `.fns =` the function to perform (no parentheses) - you can provide multiple within a [`list()`](https://rdrr.io/r/base/list.html)
+
+```{r}
+c19_df %>% 
+  group_by(state) %>% 
+  mutate(across(contains("date"), ~as.Date(., format = "%Y-%m-%d")), #change character to dates\ fromat
+         days_toAnnounce_state=date_announced-date,
+         day_toDeath_state=date-date_positive) %>%
+  summarise(across(.cols = c(day_toDeath_state, days_toAnnounce_state), # columns
+                   .fns = list("mean" = mean, "sd" = sd),    # multiple functions 
+                   na.rm=T))                                 # extra arguments
+```
+
+Here are those "tidyselect" helper functions you can provide to `.cols =` to select columns:
+
+-   [`everything()`](https://tidyselect.r-lib.org/reference/everything.html) - all other columns not mentioned\
+
+-   [`last_col()`](https://tidyselect.r-lib.org/reference/everything.html) - the last column\
+
+-   `where()` - applies a function to all columns and selects those which are TRUE\
+
+-   [`starts_with()`](https://tidyselect.r-lib.org/reference/starts_with.html) - matches to a specified prefix. Example: `starts_with("date")`
+
+-   [`ends_with()`](https://tidyselect.r-lib.org/reference/starts_with.html) - matches to a specified suffix. Example: `ends_with("_end")`\
+
+-   [`contains()`](https://tidyselect.r-lib.org/reference/starts_with.html) - columns containing a character string. Example: `contains("time")`
+
+-   [`matches()`](https://tidyselect.r-lib.org/reference/starts_with.html) - to apply a regular expression (regex). Example: `contains("[pt]al")`\
+
+-   [`num_range()`](https://tidyselect.r-lib.org/reference/starts_with.html) -
+
+-   [`any_of()`](https://tidyselect.r-lib.org/reference/all_of.html) - matches if column is named. Useful if the name might not exist. Example: `any_of(date_onset, date_death, cardiac_arrest)`
+
+```{r}
+c19_df %>% 
+  group_by(state) %>%
+  summarise(across(
+    .cols = where(is.numeric),  # all numeric columns in the data frame
+    .fns = mean,
+    na.rm=T))
+```
+
+### **`gtsummary()` package**
+
+Descriptives statistics approaches in R are numerous.
+
+I initially heavily utilised `dplyr` and the `janitor` (you can find a tutorial [here](https://rpubs.com/iaks23/931128)) and `tableone` (you can find a tutorial [`here`](https://ehsanx.github.io/intro2R/data-summary-with-tableone.html)) packages which are both fantastic packages. More recently however, I discovered `gtsummary`. And lets just say its the bomb! Its my absolutely favourite package for descriptive analysis (and we will explore some of its other powerful extensions later).
+
+![](/images/bombing_data.png)
+
+If you want to print your summary statistics in a pretty, publication-ready graphic, you can use the **gtsummary** package and its function `tbl_summary()`. The code can seem complex at first, but the outputs look very nice and print to your RStudio Viewer panel as an HTML image. s
+
+#### **Summary table**
+
+The default behavior of `tbl_summary()` is quite incredible - it takes the columns you provide and creates a summary table in one command. The function prints statistics appropriate to the column class: median and inter-quartile range (IQR) for numeric columns, and counts (%) for categorical columns. Missing values are converted to "Unknown". Footnotes are added to the bottom to explain the statistics, while the total N is shown at the top.
+
+```{r}
+c19_df %>% 
+  select(age, state, male, malaysian, bid) %>%  # keep only the columns of interest
+  tbl_summary()                                 # default
+```
+
+#### **Adjustments**
+
+**`by =`**\
+You can stratify your table by a column (e.g. by `outcome`), creating a 2-way table.
+
+**`statistic =`**\
+Use an equations to specify which statistics to show and how to display them. There are two sides to the equation, separated by a tilde `~`. On the right side, in quotes, is the statistical display desired, and on the left are the columns to which that display will apply.
+
+```{r}
+c19_df %>% 
+  select(age) %>%               # keep only columns of interest 
+  tbl_summary(                  # create summary table
+    statistic = age ~ "{mean} ({sd})") # print mean of age
+```
+
+**`digits =`**\
+Adjust the digits and rounding. Optionally, this can be specified to be for continuous columns only (as below).
+
+**`label =`**\
+Adjust how the column name should be displayed. Provide the column name and its desired label separated by a tilde. The default is the column name.
+
+**`missing_text =`**\
+Adjust how missing values are displayed. The default is "Unknown".
+
+**`type =`**\
+This is used to adjust how many levels of the statistics are shown. The syntax is similar to `statistic =` in that you provide an equation with columns on the left and a value on the right. Two common scenarios include:
+
+-   `type = all_categorical() ~ "categorical"` Forces dichotomous columns (e.g. `fever` yes/no) to show all levels instead of only the "yes" row\
+
+-   `type = all_continuous() ~ "continuous2"` Allows multi-line statistics per variable, as shown in a later section
+
+```{r}
+c19_df %>% 
+  mutate(across(contains("date"), ~as.Date(., format = "%Y-%m-%d")), #change character to dates\ fromat
+         days_delay=date_announced-date,
+         days_admitted=date-date_positive,
+         vaccinated=ifelse(is.na(date_dose2), "unvaccinated", "vaccinated")) %>%
+  select(age, male, malaysian, bid, vaccinated,
+         comorb, days_delay, days_admitted) %>% # keep only columns of interest
+  tbl_summary(     
+    by = malaysian,                                               # stratify entire table by outcome
+    statistic = list(all_continuous() ~ "{mean} ({sd})",        # stats and format for continuous columns
+                     all_categorical() ~ "{n} / {N} ({p}%)"),   # stats and format for categorical columns
+    digits = all_continuous() ~ 1,                              # rounding for continuous columns
+    type   = all_categorical() ~ "categorical",                 # force all categorical levels to display
+    label  = list(                                              # display labels for column names
+      malaysian      ~ "Nationality",                           
+      age            ~ "Age (years)",
+      male           ~ "Gender",
+      bid            ~ "Brought-in-dead",
+      comorb         ~ "Comorbids",
+      vaccinated     ~ "Vaccine status",
+      days_admitted  ~ "Duration between diagnosis and death (days) ",
+      days_delay     ~ "Duration between death and announcement (days)"),
+    missing_text = "NA"                                    # how missing values should display
+  )
+```
+
+#### **Multi-line stats for continuous variables**
+
+If you want to print multiple lines of statistics for continuous variables, you can indicate this by setting the `type =` to "continuous2". You can combine all of the previously shown elements in one table by choosing which statistics you want to show. To do this you need to tell the function that you want to get a table back by entering the type as "continuous2". The number of missing values is shown as "Unknown".
+
+```{r}
+c19_df %>%
+  mutate(across(contains("date"), ~as.Date(., format = "%Y-%m-%d")), #change character to dates\ fromat
+         days_delay=date_announced-date,
+         days_admitted=date-date_positive) %>%
+  select(age, days_delay, days_admitted) %>% # keep only columns of interest
+  tbl_summary(                               # create summary table
+    type = all_continuous() ~ "continuous2", # indicate that you want to print multiple statistics 
+    statistic = all_continuous() ~ c(
+      "{mean} ({sd})",                       # line 1: mean and SD
+      "{median} ({p25}, {p75})",             # line 2: median and IQR
+      "{min}, {max}")                        # line 3: min and max
+    )
+```
+
+### `rstatix()` for inferential statistics
+
+![](/images/inferential-stats.png){fig-align="center"}
+
+Inferential statistics is a set of statistical procedures that allows us to draw conclusions about an entire population from a representative sample. The importance of inferential statistics lies in its ability to:
+
+1.  Generalize about a population: Inferential statistics enables researchers to make predictions or inferences about a population based on the observations made in a sample.
+
+2.  Test hypotheses: With inferential statistics, researchers can test a hypothesis to determine its statistical significance.
+
+3.  Study relationships: It allows researchers to examine the relationships between different variables in a sample and to generalize these relationships to the broader population.
+
+We will not focus on the mathematics behind inferential statistics but more so the impementation within R. Nontheless, here is a quick summary of commonly used inferential statistical tests and when they are used:
+
+1.  **T-tests (One-sample, Independent Two-sample, and Paired):** These are used when we want to compare the means of one or two groups. For example, comparing the average height of men and women.
+
+2.  **Analysis of Variance (ANOVA):** ANOVA is used when comparing the means of more than two groups. For example, comparing the average income of people in three different cities.
+
+3.  **Chi-square test:** The chi-square test is used to determine if there is a significant association between two categorical variables. For example, examining the relationship between gender and voting behavior.
+
+4.  **Correlation and Regression:** Correlation is used to measure the strength and direction of the linear relationship between two variables. Regression is used to predict the value of one variable based on the value of another.
+
+Each test has assumptions that need to be satisfied for the results to be accurate, so it's essential to choose the right test for the data and research question at hand.
+
+While it is possible to run these tests in `base()` R, we will skip that in this course since our grounding has all been carried out within the `tidyverse()`. If you wish to study inferential statistics using base () R you can have a look at [this](https://ladal.edu.au/basicstatz.html#2_Selected_Parametric_tests).
+
+For the purposes of this course we shall take a deeper look at the rstatix package:
+
+#### **T-test**
+
+Use a formula syntax to specify the numeric and categorical columns for a two sample t-test:
+
+```{r}
+c19_df %>% 
+  t_test(age ~ male)
+```
+
+Or a one-sample t-test
+
+```{r}
+c19_df %>% 
+  t_test(age ~ 1, mu = 60)
+```
+
+Or one sample t-tests by group
+
+```{r}
+c19_df %>% 
+  group_by(male) %>% 
+  t_test(age ~ 1, mu = 60)
+```
+
+#### Shapiro-Wilk test
+
+Note: Sample size must be between 3-5000
+
+```{r}
+c19_df %>% 
+  head(500) %>%            # first 500 rows of case linelist, for example only
+  shapiro_test(age)
+```
+
+#### **Wilcoxon rank sum test**
+
+```{r}
+c19_df %>% 
+  wilcox_test(age ~ malaysian)
+```
+
+#### **Kruskal-Wallis test**
+
+Also known as the Mann-Whitney U test.
+
+```{r}
+c19_df %>% 
+  kruskal_test(age ~ state)
+```
+
+#### **Chi-squared test**
+
+The chi-square test function accepts a table, so first we create a cross-tabulation. There are many ways to create a cross-tabulation but here we use `tabyl()` from **janitor** and remove the left-most column of value labels before passing to `chisq_test()`.
+
+```{r}
+c19_df %>% 
+  tabyl(malaysian, bid) %>% 
+  select(-1) %>% 
+  chisq_test()
+```
+
+### **`gtsummary()` package for Inferential statistics**
+
+Use **gtsummary** if you are looking to add the results of a statistical test to a pretty table that was created with this package. Performing statistical tests of comparison with `tbl_summary` is done by adding the `add_p` function to a table and specifying which test to use. It is possible to get p-values corrected for multiple testing by using the `add_q` function. Run `?tbl_summary` for details.
+
+![](/images/excited.gif){fig-align="center"}
+
+#### **T-tests**
+
+Compare the difference in means for a continuous variable in two groups. For example, compare the mean age by patient outcome.
+
+```{r}
+c19_df %>% 
+  select(age, malaysian) %>%                 # keep variables of interest
+  tbl_summary(                               # produce summary table
+    statistic = age ~ "{mean} ({sd})",       # specify what statistics to show
+    by = malaysian) %>%                      # specify the grouping variable
+  add_p(age ~ "t.test")                      # specify what tests to perform
+```
+
+#### **Wilcoxon rank sum test**
+
+Compare the distribution of a continuous variable in two groups. The default is to use the Wilcoxon rank sum test and the median (IQR) when comparing two groups. However for non-normally distributed data or comparing multiple groups, the Kruskal-wallis test is more appropriate.
+
+```{r}
+c19_df %>% 
+  select(age, malaysian) %>%                     # keep variables of interest
+  tbl_summary(                                   # produce summary table
+    statistic = age ~ "{median} ({p25}, {p75})", # specify what statistic to show (this is default so could remove)
+    by = malaysian) %>%                          # specify the grouping variable
+  add_p(age ~ "wilcox.test")                     # specify what test to perform (default so could leave brackets empty)
+```
+
+#### **Kruskal-wallis test**
+
+Compare the distribution of a continuous variable in two or more groups, regardless of whether the data is normally distributed.
+
+```{r}
+c19_df %>% 
+  select(age, state) %>%                         # keep variables of interest
+  tbl_summary(                                   # produce summary table
+    statistic = age ~ "{median} ({p25}, {p75})", # specify what statistic to show (default, so could remove)
+    by = state) %>%                              # specify the grouping variable
+  add_p(age ~ "kruskal.test")                    # specify what test to perform
+```
+
+#### **Chi-squared test**
+
+Compare the proportions of a categorical variable in two groups. The default statistical test for `add_p()` when applied to a categorical variable is to perform a chi-squared test of independence with continuity correction, but if any expected call count is below 5 then a Fisher's exact test is used.
+
+```{r}
+c19_df %>% 
+  select(malaysian, bid) %>% # keep variables of interest
+  tbl_summary(by = bid) %>%  # produce summary table and specify grouping variable
+  add_p()                    # specify what test to perform
+```
+
+![](/images/p-value.png){fig-align="center"}
+
+### Correlations in R
+
+Correlation between numeric variables can be investigated using the **tidyverse**\
+**corrr** package. It allows you to compute correlations using Pearson, Kendall tau or Spearman rho. The package creates a table and also has a function to automatically plot the values.
+
+```{r}
+correlation_tab <- c19_df %>%
+  mutate(across(contains("date"), ~as.Date(., format = "%Y-%m-%d")), #change character to dates\ fromat
+         days_delay=as.numeric(date_announced-date),
+         days_admitted=as.numeric(date-date_positive)) %>%
+  select(age, days_delay, days_admitted) %>%                         # keep only columns of interest
+  correlate()                                        # create correlation table (using default pearson)
+
+correlation_tab                                                      # print
+```
+
+Plot a scatteplot of correlations
+
+```{r}
+## plot correlations 
+rplot(correlation_tab)
+```
+
+Finally you can create a nifty little heatmap. You can calculate a correlation data frame using the correlate() function from corrr, reshape it into a long format with melt(), and then create a heatmap with ggplot2:
+
+```{r}
+correlation_tab %>% autoplot(triangular="full") +
+  geom_text(aes(label=round(r, digits=2)), size=4)+
+  theme_minimal(16)
+```
+
+### Acknowledgements
+
+Material for this lecture was borrowed and adopted from
+
+-   [The Epidemiologist R Handbook](https://epirhandbook.com/en/index.html)
+
+-   <https://rafalab.github.io/dsbook>
+
+![](/images/images.jpeg)
+
+### 

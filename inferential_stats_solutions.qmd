@@ -1,0 +1,165 @@
+---
+title: "Practical Statistics 3: Powering up! Descriptive and Inferential Statistics"
+format: html
+editor: visual
+---
+
+### COVID-19 Vaccinations and Death in Malaysia
+
+```{r, include=FALSE}
+#load packages
+required_packages <- c("tidyverse", "lubridate", "gtsummary", "rstatix", "janitor", "corrr")
+not_installed <- required_packages[!(required_packages %in% installed.packages()[ , "Package"])]    
+if(length(not_installed)) install.packages(not_installed)                                           
+suppressWarnings(lapply(required_packages, require, character.only = TRUE))
+
+#load data
+c19_df <- read.csv("https://raw.githubusercontent.com/MoH-Malaysia/covid19-public/main/epidemic/linelist/linelist_deaths.csv")
+```
+
+### **Task 1: Descriptive statistics using `tidyverse`**
+
+Question: Compute the summary statistics (count, mean, standard deviation, minimum, and maximum) of age using tidyverse functions.
+
+Steps:
+
+1.  Install and load the tidyverse package.
+
+2.  Filter the dataset to remove missing values in the "age" column (Note there are no missing values in the dataset- the task is simply meant to simulate the code that would be required if there were).
+
+3.  Use the summary functions from `dplyr` to compute the required summary statistics. In this case- count, mean, standard deviation, minimum, and maximum
+
+Solution:
+
+```{r}
+# Step 1
+#install.packages("tidyverse")
+library(tidyverse)
+
+# Step 2 & 3
+summary_age <- c19_df %>% filter(!is.na(age)) %>% 
+  summarise(
+  count = n(),
+  mean = mean(age),
+  sd = sd(age),
+  min = min(age),
+  max = max(age)
+)
+summary_age
+```
+
+### **Task 2: Descriptive statistics using `gtsummary`**
+
+Question: Create a descriptive statistics table for age, male, bid, and malaysian variables using gtsummary.
+
+Steps:
+
+1.  Install and load the `gtsummary` package.
+
+2.  Create a subset of the data with the selected variables (Note: Select any five variables).
+
+3.  Use the `tbl_summary()` function to compute and display the descriptive statistics.
+
+4.  Stratify by any other selected variable.
+
+Solution:
+
+```{r}
+# Step 1
+#install.packages("gtsummary")
+library(gtsummary)
+
+# Step 2, 3 & 4
+df_subset <- c19_df %>% 
+  select(age, male, bid, malaysian) %>% 
+  tbl_summary(by = malaysian)
+```
+
+### **Task 3: Inferential statistics using `rstatix`**
+
+Question: Test if there is a significant difference in age between males and females using the t-test.
+
+Steps:
+
+1.  Install and load the `rstatix` package.
+
+2.  Filter the dataset to remove missing values in the "age" and "male" columns.
+
+3.  Recode the "male" variable to factor.
+
+4.  Conduct a t-test to compare the means.
+
+Solution:
+
+```{r}
+# Step 1
+#install.packages("rstatix")
+library(rstatix)
+
+# Step 2
+c19_df <- c19_df %>% filter(!is.na(age), !is.na(male))
+
+# Step 3
+c19_df$male <- factor(c19_df$male, levels = c(0, 1), labels = c("Female", "Male"))
+
+# Step 4
+c19_df %>% t_test(age ~ male)
+```
+
+### **Task 4: Inferential statistics using `gtsummary`**
+
+Question: Test if there is a significant difference in age between Malaysians and non-Malaysians using the t-test, and present the results in a table using gtsummary.
+
+Steps:
+
+1.  Recode the "malaysian" variable to factor (Tip: Use the factor function).
+
+2.  Use the `tbl_summary()` function to present the results.
+
+Solution:
+
+```{r}
+# Step 1
+c19_df$malaysian <- factor(c19_df$malaysian, levels = c(0, 1), labels = c("Non-Malaysian", "Malaysian"))
+
+# Step 2
+t_test_result <- c19_df %>% 
+  select(age, malaysian) %>%                 # keep variables of interest
+  tbl_summary(                               # produce summary table
+    statistic = age ~ "{mean} ({sd})",       # specify what statistics to show
+    by = malaysian) %>%                      # specify the grouping variable
+  add_p(age ~ "t.test") 
+t_test_result
+```
+
+### **Task 5: Correlations using `corrr`**
+
+Question: Compute the correlation between age, male, bid, and malaysian variables, and represent it in a correlation plot (Note: The selection of categorical variables is by design- just to practice the selection and presentation)
+
+Steps:
+
+1.  Install and load the `corrr` package.
+
+2.  Create a subset of the data with the selected variables.
+
+3.  Compute the correlation matrix (Note: Try ?network_plot and see how this can be used)
+
+```{r}
+# Step 1
+#install.packages("corrr")
+library(corrr)
+
+# Step 2
+df_subset <- c19_df %>% select(age, male, bid, malaysian)
+
+# Step 3
+correlation_matrix <- df_subset %>% correlate()
+
+# Step 4
+correlation_matrix %>% network_plot()
+
+```
+
+![](/images/network_plot-1.png){fig-align="center"}
+
+This would be the outcome if anything was highly correlated in our data.

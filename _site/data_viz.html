@@ -1,0 +1,1997 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.189">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Statistical Computing in R 2023 - R-tistic Insights: Visualising your data in R</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Statistical Computing in R 2023</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html">Home</a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-lectures" role="button" data-bs-toggle="dropdown" aria-expanded="false">Lectures</a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-lectures">    
+        <li>
+    <a class="dropdown-item" href="./introduction_R.html">
+ <span class="dropdown-text">Introduction</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./data_wranggling.html">
+ <span class="dropdown-text">Data Wranggling</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./data_viz.html">
+ <span class="dropdown-text">Data Visualisation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./inferential_stats.html">
+ <span class="dropdown-text">Inferential Statistics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./regression.html">
+ <span class="dropdown-text">Regression</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tutorials" role="button" data-bs-toggle="dropdown" aria-expanded="false">Tutorials</a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-tutorials">    
+        <li>
+    <a class="dropdown-item" href="./data_wranggling_tutorial.html">
+ <span class="dropdown-text">Data Wranggling</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./data_viz_tutorial.html">
+ <span class="dropdown-text">Data Visualisation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./inferential_stats_tutorial.html">
+ <span class="dropdown-text">Inferential Statistics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./regression_tutorial.html">
+ <span class="dropdown-text">Regression</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-solutions" role="button" data-bs-toggle="dropdown" aria-expanded="false">Solutions</a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-solutions">    
+        <li>
+    <a class="dropdown-item" href="./data_wranggling_solutions.html">
+ <span class="dropdown-text">Data Wranggling</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./data_viz_solutions.html">
+ <span class="dropdown-text">Data Visualisation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./inferential_stats_solutions.html">
+ <span class="dropdown-text">Inferential Statistics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./regression_solutions.html">
+ <span class="dropdown-text">Regression</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/vivekjason"><i class="bi bi-github" role="img">
+</i> 
+ </a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/vivekjason87"><i class="bi bi-twitter" role="img">
+</i> 
+ </a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="./index.xml"><i class="bi bi-rss" role="img">
+</i> 
+ </a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#a-word-to-the-wise" id="toc-a-word-to-the-wise" class="nav-link active" data-scroll-target="#a-word-to-the-wise">A word to the wise</a></li>
+  <li><a href="#prepare-for-liftoff" id="toc-prepare-for-liftoff" class="nav-link" data-scroll-target="#prepare-for-liftoff">Prepare for liftoff</a></li>
+  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"></a></li>
+  <li><a href="#grammar-of-graphics-via-ggplot2" id="toc-grammar-of-graphics-via-ggplot2" class="nav-link" data-scroll-target="#grammar-of-graphics-via-ggplot2">“Grammar of Graphics” via ggplot2</a></li>
+  <li><a href="#acknowledgements" id="toc-acknowledgements" class="nav-link" data-scroll-target="#acknowledgements">Acknowledgements</a></li>
+  <li><a href="#additional-resources" id="toc-additional-resources" class="nav-link" data-scroll-target="#additional-resources">Additional Resources</a></li>
+  <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1"></a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">R-tistic Insights: Visualising your data in R</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<p><img src="./images/banner.png" class="img-fluid"></p>
+<section id="a-word-to-the-wise" class="level3">
+<h3 class="anchored" data-anchor-id="a-word-to-the-wise">A word to the wise</h3>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Can anyone guess what statistical phenomenon is being observed here?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>datasaurus_dozen <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(dataset) <span class="sc">%&gt;%</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>( <span class="fu">mean</span>(x), <span class="fu">mean</span>(y), <span class="fu">var</span>(x), <span class="fu">var</span>(y), <span class="fu">cor</span>(x,y)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits=</span><span class="dv">3</span>) <span class="sc">%&gt;%</span> <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>), <span class="at">font_size=</span><span class="dv">17</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<table class="table table-striped" style="font-size: 17px; margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> dataset </th>
+   <th style="text-align:right;"> mean(x) </th>
+   <th style="text-align:right;"> mean(y) </th>
+   <th style="text-align:right;"> var(x) </th>
+   <th style="text-align:right;"> var(y) </th>
+   <th style="text-align:right;"> cor(x, y) </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> away </td>
+   <td style="text-align:right;"> 54.266 </td>
+   <td style="text-align:right;"> 47.835 </td>
+   <td style="text-align:right;"> 281.227 </td>
+   <td style="text-align:right;"> 725.750 </td>
+   <td style="text-align:right;"> -0.064 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> bullseye </td>
+   <td style="text-align:right;"> 54.269 </td>
+   <td style="text-align:right;"> 47.831 </td>
+   <td style="text-align:right;"> 281.207 </td>
+   <td style="text-align:right;"> 725.533 </td>
+   <td style="text-align:right;"> -0.069 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> circle </td>
+   <td style="text-align:right;"> 54.267 </td>
+   <td style="text-align:right;"> 47.838 </td>
+   <td style="text-align:right;"> 280.898 </td>
+   <td style="text-align:right;"> 725.227 </td>
+   <td style="text-align:right;"> -0.068 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> dino </td>
+   <td style="text-align:right;"> 54.263 </td>
+   <td style="text-align:right;"> 47.832 </td>
+   <td style="text-align:right;"> 281.070 </td>
+   <td style="text-align:right;"> 725.516 </td>
+   <td style="text-align:right;"> -0.064 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> dots </td>
+   <td style="text-align:right;"> 54.260 </td>
+   <td style="text-align:right;"> 47.840 </td>
+   <td style="text-align:right;"> 281.157 </td>
+   <td style="text-align:right;"> 725.235 </td>
+   <td style="text-align:right;"> -0.060 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> h_lines </td>
+   <td style="text-align:right;"> 54.261 </td>
+   <td style="text-align:right;"> 47.830 </td>
+   <td style="text-align:right;"> 281.095 </td>
+   <td style="text-align:right;"> 725.757 </td>
+   <td style="text-align:right;"> -0.062 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> high_lines </td>
+   <td style="text-align:right;"> 54.269 </td>
+   <td style="text-align:right;"> 47.835 </td>
+   <td style="text-align:right;"> 281.122 </td>
+   <td style="text-align:right;"> 725.763 </td>
+   <td style="text-align:right;"> -0.069 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> slant_down </td>
+   <td style="text-align:right;"> 54.268 </td>
+   <td style="text-align:right;"> 47.836 </td>
+   <td style="text-align:right;"> 281.124 </td>
+   <td style="text-align:right;"> 725.554 </td>
+   <td style="text-align:right;"> -0.069 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> slant_up </td>
+   <td style="text-align:right;"> 54.266 </td>
+   <td style="text-align:right;"> 47.831 </td>
+   <td style="text-align:right;"> 281.194 </td>
+   <td style="text-align:right;"> 725.689 </td>
+   <td style="text-align:right;"> -0.069 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> star </td>
+   <td style="text-align:right;"> 54.267 </td>
+   <td style="text-align:right;"> 47.840 </td>
+   <td style="text-align:right;"> 281.198 </td>
+   <td style="text-align:right;"> 725.240 </td>
+   <td style="text-align:right;"> -0.063 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> v_lines </td>
+   <td style="text-align:right;"> 54.270 </td>
+   <td style="text-align:right;"> 47.837 </td>
+   <td style="text-align:right;"> 281.232 </td>
+   <td style="text-align:right;"> 725.639 </td>
+   <td style="text-align:right;"> -0.069 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> wide_lines </td>
+   <td style="text-align:right;"> 54.267 </td>
+   <td style="text-align:right;"> 47.832 </td>
+   <td style="text-align:right;"> 281.233 </td>
+   <td style="text-align:right;"> 725.651 </td>
+   <td style="text-align:right;"> -0.067 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> x_shape </td>
+   <td style="text-align:right;"> 54.260 </td>
+   <td style="text-align:right;"> 47.840 </td>
+   <td style="text-align:right;"> 281.231 </td>
+   <td style="text-align:right;"> 725.225 </td>
+   <td style="text-align:right;"> -0.066 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p>Visualisation in key in understanding the underlying data and in key in telling a story.</p>
+<div class="callout-caution callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Danger
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>Position is the most powerful way to demonstrate differences</p></li>
+<li><p>Pie charts/ 3D charts are bad</p></li>
+<li><p>Always design a visualization with a question in mind</p></li>
+</ul>
+</div>
+</div>
+<p><strong>ggplot2</strong> holds the title of the most commonly used data visualization package in R. Its central function, <a href="https://ggplot2.tidyverse.org/reference/ggplot.html"><code>ggplot()</code></a>, forms the backbone of this package. The package, including its resulting figures, are often casually referred to as “ggplot” and the figures it produces as “ggplots”. The prefix “gg” stands for the “grammar of graphics”, which underpins the structure of the images generated. A host of additional R packages exists to expand the capabilities of ggplot2.</p>
+<p>In contrast to the base R plotting syntax, ggplot2 introduces a unique syntax that might pose a learning challenge initially. It usually demands data to be organized in a way that aligns well with the tidyverse, making these packages effective when used together.</p>
+<p>Over the next 2.5 hours we’ll walk through the basics of plotting with ggplot2.</p>
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This session will be a primer. Head on to this great resources to learn more:</p>
+<ol type="1">
+<li><p>There are several great <a href="https://epirhandbook.com/en/ggplot-tips.html#ggplot-tips">tips</a> on the R Epi Handbook</p></li>
+<li><p>Cheat sheets are hacks. The invaluable <a href="https://github.com/rstudio/cheatsheets/raw/master/data-visualization-2.1.pdf">ggplot data visualization cheat sheet</a> can be downloaded from the RStudio website.</p></li>
+<li><p>For those seeking innovative ideas for data visualization, we recommend exploring websites such as the <a href="https://www.r-graph-gallery.com/">R graph gallery</a> and <a href="https://www.data-to-viz.com/caveats.html">Data-to-viz</a>.</p></li>
+</ol>
+</div>
+</div>
+</section>
+<section id="prepare-for-liftoff" class="level3">
+<h3 class="anchored" data-anchor-id="prepare-for-liftoff">Prepare for liftoff</h3>
+<p><img src="./images/spongebob_takeoff.gif" class="img-fluid" width="500"></p>
+<section id="load-packages" class="level4">
+<h4 class="anchored" data-anchor-id="load-packages">Load packages</h4>
+<p>Lets get some important packages loaded</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>required_packages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"tidyverse"</span>, <span class="st">"rio"</span>, <span class="st">"here"</span>, <span class="st">"stringr"</span>, <span class="st">"lubridate"</span>, <span class="st">"ggforce"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>not_installed <span class="ot">&lt;-</span> required_packages[<span class="sc">!</span>(required_packages <span class="sc">%in%</span> <span class="fu">installed.packages</span>()[ , <span class="st">"Package"</span>])]    </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">length</span>(not_installed)) <span class="fu">install.packages</span>(not_installed)                                           </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressWarnings</span>(<span class="fu">lapply</span>(required_packages, require, <span class="at">character.only =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: rio</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: here</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>here() starts at C:/R/nih_training/StatsComputingR_sbdr2023</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: ggforce</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="section" class="level3">
+<h3 class="anchored" data-anchor-id="section"></h3>
+<section id="importing-some-data" class="level4">
+<h4 class="anchored" data-anchor-id="importing-some-data">Importing some data</h4>
+<p>For the purposes of this session lets utilise the Malaysian COVID-19 deaths linelinest maintained by the Ministry of Health on their <a href="https://github.com/MoH-Malaysia">Github page</a>. Codes for each column are as follows:</p>
+<ol type="1">
+<li><p><code>date</code>: yyyy-mm-dd format; date of death</p></li>
+<li><p><code>date_announced</code>: date on which the death was announced to the public (i.e.&nbsp;registered in the public linelist)</p></li>
+<li><p><code>date_positive</code>: date of positive sample</p></li>
+<li><p><code>date_doseN</code>: date of the individual’s first/second/third dose (if any)</p></li>
+<li><p><code>brandN</code>: <code>p</code> = Pfizer, <code>s</code> = Sinovac, <code>a</code> = AstraZeneca, <code>c</code> = Cansino, <code>m</code> = Moderna, <code>h</code> = Sinopharm, <code>j</code> = Janssen, <code>u</code> = unverified (pending sync with VMS)</p></li>
+<li><p><code>state</code>: state of residence</p></li>
+<li><p><code>age</code>: age as an integer; note that it is possible for age to be 0, denoting infants less than 6 months old</p></li>
+<li><p><code>male</code>: binary variable with 1 denoting male and 0 denoting female</p></li>
+<li><p><code>bid</code>: binary variable with 1 denoting brought-in-dead and 0 denoting an inpatient death</p></li>
+<li><p><code>malaysian</code>: binary variable with 1 denoting Malaysian and 0 denoting non-Malaysian</p></li>
+<li><p><code>comorb</code>: binary variable with 1 denoting that the individual has comorbidities and 0 denoting no comorbidities declared</p></li>
+</ol>
+<p>Lets call in the data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>c19_df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://raw.githubusercontent.com/MoH-Malaysia/covid19-public/main/epidemic/linelist/linelist_deaths.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="check-and-clean" class="level4">
+<h4 class="anchored" data-anchor-id="check-and-clean">Check and clean</h4>
+<p>We can have a very quick look at the data structure using the <code>skim</code> function from skimr.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>skimr<span class="sc">::</span><span class="fu">skim</span>(c19_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<table style="width: auto;" class="table table-condensed">
+<caption>
+Data summary
+</caption>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Name
+</td>
+<td style="text-align:left;">
+c19_df
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Number of rows
+</td>
+<td style="text-align:left;">
+37152
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Number of columns
+</td>
+<td style="text-align:left;">
+15
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+_______________________
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Column type frequency:
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+character
+</td>
+<td style="text-align:left;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+________________________
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Group variables
+</td>
+<td style="text-align:left;">
+None
+</td>
+</tr>
+</tbody>
+
+</table>
+<p><strong>Variable type: character</strong></p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+skim_variable
+</th>
+<th style="text-align:right;">
+n_missing
+</th>
+<th style="text-align:right;">
+complete_rate
+</th>
+<th style="text-align:right;">
+min
+</th>
+<th style="text-align:right;">
+max
+</th>
+<th style="text-align:right;">
+empty
+</th>
+<th style="text-align:right;">
+n_unique
+</th>
+<th style="text-align:right;">
+whitespace
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+date
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1004
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+date_announced
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1000
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+date_positive
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+999
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+date_dose1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+22437
+</td>
+<td style="text-align:right;">
+298
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+date_dose2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+28034
+</td>
+<td style="text-align:right;">
+267
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+date_dose3
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+35719
+</td>
+<td style="text-align:right;">
+161
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+brand1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:right;">
+22437
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+brand2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:right;">
+28034
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+brand3
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:right;">
+35719
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+state
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+17
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+
+</table>
+<p><strong>Variable type: numeric</strong></p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+skim_variable
+</th>
+<th style="text-align:right;">
+n_missing
+</th>
+<th style="text-align:right;">
+complete_rate
+</th>
+<th style="text-align:right;">
+mean
+</th>
+<th style="text-align:right;">
+sd
+</th>
+<th style="text-align:right;">
+p0
+</th>
+<th style="text-align:right;">
+p25
+</th>
+<th style="text-align:right;">
+p50
+</th>
+<th style="text-align:right;">
+p75
+</th>
+<th style="text-align:right;">
+p100
+</th>
+<th style="text-align:left;">
+hist
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+age
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+62.65
+</td>
+<td style="text-align:right;">
+16.59
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+51
+</td>
+<td style="text-align:right;">
+64
+</td>
+<td style="text-align:right;">
+75
+</td>
+<td style="text-align:right;">
+130
+</td>
+<td style="text-align:left;">
+▁▃▇▃▁
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+male
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.58
+</td>
+<td style="text-align:right;">
+0.49
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+▆▁▁▁▇
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+bid
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.21
+</td>
+<td style="text-align:right;">
+0.41
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+▇▁▁▁▂
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+malaysian
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.89
+</td>
+<td style="text-align:right;">
+0.31
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+▁▁▁▁▇
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+comorb
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.79
+</td>
+<td style="text-align:right;">
+0.41
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+▂▁▁▁▇
+</td>
+</tr>
+</tbody>
+
+</table>
+</div>
+</div>
+<p>So we can already see that unvaccinated individuals are coded here as EMPTY cells- lets change these dates to NA and their brands to Unvaccinated status. We can leave everything else as it is for now.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>c19_df <span class="ot">&lt;-</span> c19_df <span class="sc">%&gt;%</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.character), na_if, <span class="st">""</span>),<span class="co">#look at all character columns and change "" empty cells to NA</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="fu">contains</span>(<span class="st">"brand"</span>), <span class="sc">~</span><span class="fu">replace_na</span>(<span class="fu">na_if</span>(.,<span class="st">"NA"</span>),<span class="st">"unvaccinated"</span>)),<span class="co">#replace all NA cells in brand columns to unvaccinated</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="fu">contains</span>(<span class="st">"date"</span>), <span class="sc">~</span><span class="fu">as.Date</span>(., <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>)),<span class="co">#change character to dates\ fromat</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">duration_toDeath=</span><span class="fu">as.numeric</span>(date<span class="sc">-</span>date_positive)) <span class="co">#create a rabdom second continuous variable</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Lets also create a aggregated set counting deaths by epidemiologic weeks</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>week_df <span class="ot">&lt;-</span> c19_df <span class="sc">%&gt;%</span> <span class="fu">select</span>(state, date, age) <span class="sc">%&gt;%</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age_cat=</span> <span class="fu">ifelse</span>(age<span class="sc">&lt;</span><span class="dv">20</span>, <span class="st">"&lt;19"</span>, </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">ifelse</span>(age<span class="sc">&gt;</span><span class="dv">59</span>, <span class="st">"&gt;60"</span>, <span class="st">"20-59"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>age) <span class="sc">%&gt;%</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(state, age_cat, date) <span class="sc">%&gt;%</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span> (<span class="at">deaths=</span><span class="fu">n</span>()) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'state', 'age_cat'. You can override using
+the `.groups` argument.</code></pre>
+</div>
+</div>
+<p>Any idea what is wrong with the dataset produced above- take a minute!</p>
+<p>Try opening the dataset using <code>View(week_df)</code> .</p>
+<p>Well if you still don’t know try and figure out what the code below is doing.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>week_df <span class="ot">&lt;-</span> week_df <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(state, age_cat) <span class="sc">%&gt;%</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">complete</span>(<span class="at">date =</span> <span class="fu">seq</span>(<span class="fu">min</span>(date), <span class="fu">max</span>(date), <span class="at">by=</span><span class="st">"day"</span>), <span class="at">fill =</span> <span class="fu">list</span>(<span class="at">deaths =</span> <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="grammar-of-graphics-via-ggplot2" class="level3">
+<h3 class="anchored" data-anchor-id="grammar-of-graphics-via-ggplot2">“Grammar of Graphics” via ggplot2</h3>
+<p>ggplot2 plotting functions are structured in a layered approach, with different components of the plot added sequentially using the plus (+) symbol. This methodology results in a layered plot object which can be saved, altered, displayed, or exported as needed.</p>
+<p>Even though ggplot objects can get intricate, the usual layering sequence is as follows:</p>
+<ol type="1">
+<li><p>Start with the fundamental ggplot() function - this initializes the ggplot and paves the way for other functions to be appended using the + symbol. Generally, the data set to be used is declared in this function.</p></li>
+<li><p>Add geometry layers, denoted as “geom” layers - these functions represent the data in various visual forms (shapes), like a bar chart, line graph, scatter plot, histogram, or even a mix of these. These functions are recognizable by their prefix “geom_”.</p></li>
+<li><p>Include design components to the plot such as labels for axes, title, fonts, sizes, color patterns, legends, or axis rotation.</p></li>
+</ol>
+<p>An example of basic code structure is provided below. Detailed explanation of each segment will follow in the succeeding sections.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot data from my_data columns as red points</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> my_data)<span class="sc">+</span>                   <span class="co"># use the dataset "my_data"</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(                             <span class="co"># add a layer of points (dots)</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> col1, <span class="at">y =</span> col2),    <span class="co"># "map" data column to axes</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"red"</span>)<span class="sc">+</span>                       <span class="co"># other specification for the geom</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>()<span class="sc">+</span>                                 <span class="co"># here you add titles, axes labels, etc.</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>()                                 <span class="co"># here you adjust color, font, size etc of non-data plot elements (axes, title, etc.) </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>A breakdown of each part of the GG is as follows:</p>
+<ol type="1">
+<li><p><code>ggplot()</code>: The ggplot2 visualization begins with the <code>ggplot()</code> command, acting as a blank canvas for subsequent layers. It usually incorporates the data = argument, setting the default dataset. The command ends with a +, remaining “open” for additions. The plot executes only when a final layer is added without a +.</p></li>
+<li><p><code>geoms</code>: A ggplot2 plot’s foundation, created with <code>ggplot()</code>, needs added geometry layers (“<code>geoms</code>”) to visualize data through shapes like bar plots or histograms. Functions starting with geom_, also known as <code>geom_XXXX()</code>, create these shapes. Common ones include</p></li>
+</ol>
+<ul>
+<li><p><code>geom_histogram()</code>- Histogram</p></li>
+<li><p><code>geom_bar()</code> or <code>geom_col()</code>- Bar charts</p></li>
+<li><p><code>geom_boxplot()</code>- Boxplots</p></li>
+<li><p><code>geom_point()</code>- Scatter plots</p></li>
+<li><p><code>geom_line()</code> or <code>geom_path()</code>- Line charts</p></li>
+<li><p><code>geom_smooth()</code>- Trend lines</p>
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>With &gt;40 geoms in ggplot2 and many more developed by users, various plots can be created, as seen in the <a href="https://r-graph-gallery.com/">ggplot2 gallery</a>.</p>
+</div>
+</div></li>
+</ul>
+<section id="mapping-and-aesthetics" class="level4">
+<h4 class="anchored" data-anchor-id="mapping-and-aesthetics">Mapping and aesthetics</h4>
+<p>In ggplot2, geometry functions require data mapping instructions for plot components like axes or shape colors, typically involving the x-axis and possibly the y-axis. This is done with the <code>mapping = aes()</code> argument, such as <code>mapping = aes(x = col1, y = col2)</code>. For instance, the <code>geom_point()</code> function inherits the axis-column assignments from the preceding <code>ggplot()</code> command and visually represents those relationships as points on the canvas.</p>
+<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Aesthetic mapping within <code>mapping = aes()</code> can be written in several places in your plotting commands and can even be written more than once. Just remember mapping at the top command leads to structure being inherited below it.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> c19_df, </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> duration_toDeath))<span class="sc">+</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>or mapped in the geom</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> c19_df)<span class="sc">+</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> duration_toDeath))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>A range of aesthetics can be defined with each <code>geom_XXXX</code> with come not being available in others. Several common ones include:</p>
+<ul>
+<li><p><code>shape =</code> Display a point with <a href="https://ggplot2.tidyverse.org/reference/geom_point.html"><code>geom_point()</code></a> as a dot, star, triangle, or square…<br>
+</p></li>
+<li><p><code>fill =</code> The interior color (e.g.&nbsp;of a bar or boxplot)<br>
+</p></li>
+<li><p><code>color =</code> The exterior line of a bar, boxplot, etc., or the point color if using <a href="https://ggplot2.tidyverse.org/reference/geom_point.html"><code>geom_point()</code></a><br>
+</p></li>
+<li><p><code>size =</code> Size (e.g.&nbsp;line thickness, point size)<br>
+</p></li>
+<li><p><code>alpha =</code> Transparency (1 = opaque, 0 = invisible)<br>
+</p></li>
+<li><p><code>binwidth =</code> Width of histogram bins<br>
+</p></li>
+<li><p><code>width =</code> Width of “bar plot” columns<br>
+</p></li>
+<li><p><code>linetype =</code> Line type (e.g.&nbsp;solid, dashed, dotted)</p></li>
+</ul>
+</section>
+<section id="histograms-density-charts" class="level4">
+<h4 class="anchored" data-anchor-id="histograms-density-charts">Histograms &amp; Density charts</h4>
+<p>Histograms, unlike bar charts, depict the distribution of a continuous variable with adjoining bars, representing grouped data ranges. Created using <code>geom_histogram()</code>, they require only one column input and divide the data into ‘bins’ based on numerical values. The number of <code>bins</code> or <code>binwidth</code> can be specified, otherwise, an optimal value is suggested.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A) Regular histogram</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> c19_df, <span class="fu">aes</span>(<span class="at">x =</span> age))<span class="sc">+</span>  <span class="co"># provide x variable</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()<span class="sc">+</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"A) Default histogram (30 bins)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># B) More bins</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> c19_df, <span class="fu">aes</span>(<span class="at">x =</span> age))<span class="sc">+</span>  <span class="co"># provide x variable</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">50</span>)<span class="sc">+</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"B) Set to 50 bins"</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="co"># C) Fewer bins</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> c19_df, <span class="fu">aes</span>(<span class="at">x =</span> age))<span class="sc">+</span>  <span class="co"># provide x variable</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">5</span>)<span class="sc">+</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"C) Set to 5 bins"</span>)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="co"># D) More bins</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> c19_df, <span class="fu">aes</span>(<span class="at">x =</span> age))<span class="sc">+</span>  <span class="co"># provide x variable</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">1</span>)<span class="sc">+</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"D) binwidth of 1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-13-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-13-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-13-4.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>To get smoothed proportions, you can use <a href="https://ggplot2.tidyverse.org/reference/geom_density.html"><code>geom_density()</code></a>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Frequency with proportion axis, smoothed</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> c19_df, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> age)) <span class="sc">+</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">size =</span> <span class="dv">1</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>)<span class="sc">+</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Proportional density"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Stacked frequency with proportion axis, smoothed</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> c19_df, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">fill =</span> <span class="fu">factor</span>(malaysian))) <span class="sc">+</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">size =</span> <span class="dv">1</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">position =</span> <span class="st">"stack"</span>)<span class="sc">+</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"'Stacked' proportional densities"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-14-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>A “stacked” histogram of continuous data can be created either by using <code>geom_histogram()</code> with the <code>fill =</code> argument within <code>aes()</code> assigned to the grouping column, or through <code>geom_freqpoly()</code>. Setting <code>y = after_stat(density)</code> allows proportion representation of all values per group. Note the difference between <code>color =</code> and <code>fill =</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># "Stacked" histogram</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> c19_df, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">fill =</span> <span class="fu">factor</span>(malaysian))) <span class="sc">+</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">2</span>)<span class="sc">+</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"'Stacked' histogram"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Frequency </span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> c19_df, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">color =</span> <span class="fu">factor</span>(malaysian))) <span class="sc">+</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_freqpoly</span>(<span class="at">binwidth =</span> <span class="dv">2</span>, <span class="at">size =</span> <span class="dv">2</span>)<span class="sc">+</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Freqpoly"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-15-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Frequency with proportion axis</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> c19_df, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> <span class="fu">after_stat</span>(density), <span class="at">color =</span> <span class="fu">factor</span>(malaysian))) <span class="sc">+</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_freqpoly</span>(<span class="at">binwidth =</span> <span class="dv">5</span>, <span class="at">size =</span> <span class="dv">2</span>)<span class="sc">+</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Proportional freqpoly"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-15-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Frequency with proportion axis, smoothed</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> c19_df, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> <span class="fu">after_stat</span>(density), <span class="at">fill =</span> <span class="fu">factor</span>(malaysian))) <span class="sc">+</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">size =</span> <span class="dv">2</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>)<span class="sc">+</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Proportional, smoothed with geom_density()"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-15-4.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="box-plots" class="level4">
+<h4 class="anchored" data-anchor-id="box-plots">Box-plots</h4>
+<p><code>geom_boxplot()</code> in ggplot2 creates box plots by mapping only one axis (x or y) within <code>aes()</code>. Box plots per group are made by assigning the grouping column to the unassigned axis.</p>
+<div class="callout-warning callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Be aware, NA values appear as separate plots unless removed. Optional aesthetics like color can be used.
+</div>
+</div>
+<div class="callout-body-container callout-body">
+
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A) Overall boxplot</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> c19_df)<span class="sc">+</span>  </span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">y =</span> age))<span class="sc">+</span>   <span class="co"># only y axis mapped (not x)</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"A) Overall boxplot"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># B) Box plot by group</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> c19_df, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">y =</span> age, <span class="at">x =</span> malaysian, <span class="at">fill =</span> <span class="fu">factor</span>(malaysian))) <span class="sc">+</span> </span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()<span class="sc">+</span>                     </span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)<span class="sc">+</span>   <span class="co"># remove legend (redundant)</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"B) Boxplot by nationality"</span>)      </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-16-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="violin-jitter-and-sina-plots" class="level4">
+<h4 class="anchored" data-anchor-id="violin-jitter-and-sina-plots">Violin, jitter and sina-plots</h4>
+<p>Below is code for creating <strong>violin plots</strong> (<code>geom_violin</code>) and <strong>jitter plots</strong> (<code>geom_jitter</code>) to show distributions. You can specify that the fill or color is also determined by the data, by inserting these options within <a href="https://ggplot2.tidyverse.org/reference/aes.html"><code>aes()</code></a>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A) Jitter plot by group</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> c19_df,      <span class="co"># remove missing values</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">y =</span> age,                     <span class="co"># Continuous variable</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> malaysian,                           <span class="co"># Grouping variable</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">color =</span> <span class="fu">factor</span>(malaysian)))<span class="sc">+</span>                     <span class="co"># Color variable</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>()<span class="sc">+</span>                                  <span class="co"># Create the violin plot</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"A) jitter plot by nationality"</span>)     </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># B) Violin plot by group</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> c19_df,       <span class="co"># remove missing values</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">y =</span> age,                      <span class="co"># Continuous variable</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> malaysian,                            <span class="co"># Grouping variable</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">fill =</span> <span class="fu">factor</span>(malaysian)))<span class="sc">+</span>                       <span class="co"># fill variable (color)</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>()<span class="sc">+</span>                                   <span class="co"># create the violin plot</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"B) violin plot by nationality"</span>)    </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-17-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>i like the violin plot for distributions but Sina plots really take the cake.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A) Sina plot by group</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> c19_df, </span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">y =</span> age,           <span class="co"># numeric variable</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> malaysian)) <span class="sc">+</span>    <span class="co"># group variable</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">fill =</span> <span class="fu">factor</span>(malaysian)), <span class="co"># fill (color of violin background)</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"white"</span>,     <span class="co"># white outline</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.2</span>)<span class="sc">+</span>        <span class="co"># transparency</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sina</span>(</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">size=</span><span class="dv">1</span>,                <span class="co"># Change the size of the jitter</span></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">color =</span> <span class="fu">factor</span>(malaysian)))<span class="sc">+</span> <span class="co"># color (color of dots)</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(       <span class="co"># Define fill for violin background by death/recover</span></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"1"</span> <span class="ot">=</span> <span class="st">"#bf5300"</span>, </span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>              <span class="st">"0"</span> <span class="ot">=</span> <span class="st">"#11118c"</span>)) <span class="sc">+</span> </span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(      <span class="co"># Define colours for points by death/recover</span></span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"1"</span> <span class="ot">=</span> <span class="st">"#bf5300"</span>, </span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>              <span class="st">"0"</span> <span class="ot">=</span> <span class="st">"#11118c"</span>)) <span class="sc">+</span> </span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span>                                <span class="co"># Remove the gray background</span></span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span>                <span class="co"># Remove unnecessary legend</span></span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"B) violin and sina plot by nationality, with extra formatting"</span>)      </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="line-chart" class="level4">
+<h4 class="anchored" data-anchor-id="line-chart">Line chart</h4>
+<p>Simple line charts are great and can be used like scatterplots which we already know the basics and of course line charts- we can of course look at 2 continuous variables in this case.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>week_df) <span class="sc">+</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">mapping=</span><span class="fu">aes</span>(<span class="at">x=</span>date, <span class="at">y=</span>deaths, <span class="at">col=</span>state)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>week_df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(date<span class="sc">&gt;</span><span class="fu">as.Date</span>(<span class="st">"2022-12-31"</span>))) <span class="sc">+</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">mapping=</span><span class="fu">aes</span>(<span class="at">x=</span>date, <span class="at">y=</span>deaths, <span class="at">col=</span>state)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-19-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="heat-maps" class="level4">
+<h4 class="anchored" data-anchor-id="heat-maps">Heat maps</h4>
+<p>My favorite plot- this one is super informative and flexible being able to storytell upt to 2 continuous variables in one go. Lets try an example</p>
+<p>First get the data long as we saw earlier and on information we wish to check:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>bid_df <span class="ot">&lt;-</span> c19_df <span class="sc">%&gt;%</span> <span class="fu">select</span>(malaysian, bid, date) <span class="sc">%&gt;%</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(malaysian, date) <span class="sc">%&gt;%</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span> (<span class="at">deaths=</span><span class="fu">n</span>(),</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">bid=</span><span class="fu">sum</span>(bid<span class="sc">==</span><span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">bid_rate=</span>(bid<span class="sc">/</span>deaths)<span class="sc">*</span><span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">complete</span>(<span class="at">date =</span> <span class="fu">seq</span>(<span class="fu">min</span>(date), <span class="fu">max</span>(date), <span class="at">by=</span><span class="st">"day"</span>), <span class="at">fill =</span> <span class="fu">list</span>(<span class="at">bid_rate =</span> <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'malaysian'. You can override using the
+`.groups` argument.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> bid_df) <span class="sc">+</span>       <span class="co"># use long data, with proportions as Freq</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(                    <span class="co"># visualize it in tiles</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> date,         <span class="co"># x-axis is case age</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> malaysian,     <span class="co"># y-axis is infector age</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">fill =</span> bid_rate))<span class="sc">+</span>            <span class="co"># color of the tile is the Freq column in the data</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(          <span class="co"># adjust the fill color of the tiles</span></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">low =</span> <span class="st">"blue"</span>,</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">high =</span> <span class="st">"orange"</span>)<span class="sc">+</span></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(                         <span class="co"># labels</span></span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Date"</span>,</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Nationality"</span>,</span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Where are the deaths occuring"</span>,</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Frequency BID deaths by nationality"</span>,</span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Proportion of</span><span class="sc">\n</span><span class="st"> all deaths"</span>     <span class="co"># legend title</span></span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="bar-chart" class="level4">
+<h4 class="anchored" data-anchor-id="bar-chart">Bar chart</h4>
+<p><code>geom_bar()</code> in ggplot2 creates bar plots where the height represents the count of relevant rows. It needs only one axis assignment, typically the x-axis. Stacked bars can be achieved by adding a <code>fill =</code> column assignment within <code>aes()</code>. The unassigned axis, titled “count”, corresponds to row numbers. Plot orientation and factor levels order can be manipulated for better visuals.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A) Outcomes in all cases</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(c19_df) <span class="sc">+</span> </span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">fct_rev</span>(state)), <span class="at">width =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"A) Number of deaths by state"</span>,</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"State"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># B) Outcomes in all cases by state</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(c19_df) <span class="sc">+</span> </span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">fct_rev</span>(state), <span class="at">fill =</span> <span class="fu">factor</span>(malaysian)), <span class="at">width =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"B) Number of dead by nationality and state"</span>,</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"State"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-22-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><code>geom_col()</code> in ggplot2 creates bar plots with height reflecting pre-calculated data values, usually aggregated counts or proportions, using both axes assignments.</p>
+<p>Lets calculate the proportions</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>state_outcomes <span class="ot">&lt;-</span> c19_df <span class="sc">%&gt;%</span> </span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">status=</span><span class="fu">ifelse</span>(malaysian<span class="sc">==</span><span class="dv">1</span><span class="sc">&amp;</span>bid<span class="sc">==</span><span class="dv">1</span>, <span class="st">"Non-Malaysian BID"</span>,</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>                       <span class="fu">ifelse</span>(malaysian<span class="sc">==</span><span class="dv">0</span><span class="sc">&amp;</span>bid<span class="sc">==</span><span class="dv">1</span>, <span class="st">"Malaysian BID"</span>,</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>                              <span class="fu">ifelse</span>(malaysian<span class="sc">==</span><span class="dv">1</span><span class="sc">&amp;</span>bid<span class="sc">==</span><span class="dv">0</span>, <span class="st">"Non-Malaysian Hospital"</span>, <span class="st">"Malaysian Hospital"</span>)))) <span class="sc">%&gt;%</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(state, status) <span class="sc">%&gt;%</span>  <span class="co"># get counts by state and outcome</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(state) <span class="sc">%&gt;%</span>        <span class="co"># Group so proportions are out of state total</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">proportion =</span> n<span class="sc">/</span><span class="fu">sum</span>(n)<span class="sc">*</span><span class="dv">100</span>) <span class="co"># calculate proportions of state total</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(state_outcomes) <span class="co"># Preview data</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+# Groups:   state [2]
+  state status                     n proportion
+  &lt;chr&gt; &lt;chr&gt;                  &lt;int&gt;      &lt;dbl&gt;
+1 Johor Malaysian BID            162       3.42
+2 Johor Malaysian Hospital       204       4.30
+3 Johor Non-Malaysian BID        550      11.6 
+4 Johor Non-Malaysian Hospital  3824      80.7 
+5 Kedah Malaysian BID             28       1.02
+6 Kedah Malaysian Hospital        42       1.52</code></pre>
+</div>
+</div>
+<p>We then create the ggplot with some added formatting:</p>
+<ul>
+<li><p><strong>Axis flip</strong>: Swapped the axis around with <a href="https://ggplot2.tidyverse.org/reference/coord_flip.html"><code>coord_flip()</code></a> so that we can read the hospital names.</p></li>
+<li><p><strong>Columns side-by-side</strong>: Added a <code>position = "dodge"</code> argument so that the bars for death and recover are presented side by side rather than stacked. Note stacked bars are the default.</p></li>
+<li><p><strong>Column width</strong>: Specified ‘width’, so the columns are half as thin as the full possible width.</p></li>
+<li><p><strong>Column order</strong>: Reversed the order of the categories on the y axis so that ‘Other’ and ‘Missing’ are at the bottom, with <code>scale_x_discrete(limits=rev)</code>. Note that we used that rather than <code>scale_y_discrete</code> because hospital is stated in the <code>x</code> argument of <a href="https://ggplot2.tidyverse.org/reference/aes.html"><code>aes()</code></a>, even if visually it is on the y axis. We do this because Ggplot seems to present categories backwards unless we tell it not to.<br>
+</p></li>
+<li><p><strong>Other details</strong>: Labels/titles and colours added within <code>labs</code> and <code>scale_fill_color</code> respectively.</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Outcomes in all cases by hospital</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(state_outcomes) <span class="sc">+</span>  </span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">mapping =</span> <span class="fu">aes</span>(</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> proportion,                 <span class="co"># show pre-calculated proportion values</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> <span class="fu">fct_rev</span>(state),          <span class="co"># reverse level order so missing/other at bottom</span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">fill =</span> <span class="fu">factor</span>(status)),                <span class="co"># stacked by outcome</span></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="fl">0.5</span>)<span class="sc">+</span>                    <span class="co"># thinner bars (out of 1)</span></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span>                  <span class="co"># Minimal theme </span></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)<span class="sc">+</span></span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">subtitle =</span> <span class="st">"Number of COVID-19 deaths in Malaysia, by state"</span>,</span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"Outcome"</span>,             <span class="co"># legend title</span></span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Count"</span>,                  <span class="co"># y axis title</span></span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"State"</span>)<span class="sc">+</span> <span class="co"># x axis title</span></span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(                 <span class="co"># adding colors manually</span></span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Non-Malaysian BID"</span> <span class="ot">=</span> <span class="st">"#CE0200"</span>,</span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Malaysian BID"</span> <span class="ot">=</span> <span class="st">"#e5e500"</span>,</span>
+<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Non-Malaysian Hospital"</span> <span class="ot">=</span> <span class="st">"#3B1c8C"</span>,</span>
+<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Malaysian Hospital"</span> <span class="ot">=</span> <span class="st">"#21908D"</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="static-vs-scaled" class="level4">
+<h4 class="anchored" data-anchor-id="static-vs-scaled">Static vs Scaled</h4>
+<p>Aesthetics can be assigned values in two ways:</p>
+<ol type="1">
+<li><p>Assigned a static value (e.g.&nbsp;color = “blue”) to apply across all plotted observations</p></li>
+<li><p>Assigned to a column of the data (e.g.&nbsp;color = hospital) such that display of each observation depends on its value in that column</p></li>
+</ol>
+<section id="static" class="level5">
+<h5 class="anchored" data-anchor-id="static">Static</h5>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># scatterplot</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> c19_df, </span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> duration_toDeath))<span class="sc">+</span>  <span class="co"># set data and axes mapping</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"firebrick2"</span>, <span class="at">size =</span> <span class="fl">0.5</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>)         <span class="co"># set static point aesthetics</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="scaled" class="level5">
+<h5 class="anchored" data-anchor-id="scaled">Scaled</h5>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># scatterplot</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> c19_df,   <span class="co"># set data</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(     <span class="co"># map aesthetics to column values</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> age,           <span class="co"># map x-axis to age            </span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> duration_toDeath,         <span class="co"># map y-axis to weight</span></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">color =</span> state)</span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>       )<span class="sc">+</span>     <span class="co"># map color to age</span></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">0.5</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>)         <span class="co"># display data as points </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="groups" class="level4">
+<h4 class="anchored" data-anchor-id="groups">Groups</h4>
+<p>Data can be conveniently grouped for plotting by assigning a “grouping” column to an appropriate aesthetic within <code>mapping = aes()</code>, effective for both continuous and categorical values.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> c19_df,</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> duration_toDeath, <span class="at">color =</span> malaysian))<span class="sc">+</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Please note that different grouping variables are required for different geoms- for instance <code>geom_bar</code> requires the <code>fill</code> argument instead ofcolour</p>
+</section>
+<section id="facets" class="level4">
+<h4 class="anchored" data-anchor-id="facets">Facets</h4>
+<p>Faceting is done with one of the following <strong>ggplot2</strong> functions:</p>
+<ol type="1">
+<li><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html"><code>facet_wrap()</code></a> To show a different panel for each level of a <em>single</em> variable. One example of this could be showing a different epidemic curve for each hospital in a region. Facets are ordered alphabetically, unless the variable is a factor with other ordering defined.<br>
+</li>
+</ol>
+<ul>
+<li>You can invoke certain options to determine the layout of the facets, e.g.&nbsp;<code>nrow = 1</code> or <code>ncol = 1</code> to control the number of rows or columns that the faceted plots are arranged within.</li>
+</ul>
+<ol start="2" type="1">
+<li><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html"><code>facet_grid()</code></a> This is used when you want to bring a second variable into the faceting arrangement. Here each panel of a grid shows the intersection between values in <em>two columns</em>. For example, epidemic curves for each hospital-age group combination with hospitals along the top (columns) and age groups along the sides (rows).</li>
+</ol>
+<p><code>nrow</code> and <code>ncol</code> are not relevant, as the subgroups are presented in a grid</p>
+<section id="wrapping" class="level5">
+<h5 class="anchored" data-anchor-id="wrapping">Wrapping</h5>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A plot with facets by district</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(week_df, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> deaths)) <span class="sc">+</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">width =</span> <span class="dv">1</span>, <span class="at">fill =</span> <span class="st">"darkred"</span>) <span class="sc">+</span>       <span class="co"># plot the count data as columns</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span>                              <span class="co"># simplify the background panels</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(                                         <span class="co"># add plot labels, title, etc.</span></span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Date of report"</span>,</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"COVID-19 deaths"</span>,</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"COVID-19 deaths by states"</span>) <span class="sc">+</span></span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>state, <span class="at">scales =</span> <span class="st">"free_y"</span>)                       <span class="co"># the facets are created</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="gridding" class="level5">
+<h5 class="anchored" data-anchor-id="gridding">Gridding</h5>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A plot with facets by district</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(week_df, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> deaths)) <span class="sc">+</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">width =</span> <span class="dv">1</span>, <span class="at">fill =</span> <span class="st">"darkred"</span>) <span class="sc">+</span>       <span class="co"># plot the count data as columns</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span>                              <span class="co"># simplify the background panels</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(                                         <span class="co"># add plot labels, title, etc.</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Date of report"</span>,</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"COVID-19 deaths"</span>,</span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"COVID-19 deaths by states"</span>) <span class="sc">+</span></span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(age_cat<span class="sc">~</span>state, <span class="at">scales =</span> <span class="st">"free_y"</span>)                       <span class="co"># the facets are created</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="themes" class="level4">
+<h4 class="anchored" data-anchor-id="themes">Themes</h4>
+<section id="complete-themes" class="level5">
+<h5 class="anchored" data-anchor-id="complete-themes">Complete themes</h5>
+<p>Add a <a href="https://ggplot2.tidyverse.org/reference/ggtheme.html"><em>complete theme</em></a> <code>theme_()</code> function to make sweeping adjustments - these include <a href="https://ggplot2.tidyverse.org/reference/ggtheme.html"><code>theme_classic()</code></a>, <a href="https://ggplot2.tidyverse.org/reference/ggtheme.html"><code>theme_minimal()</code></a>, <a href="https://ggplot2.tidyverse.org/reference/ggtheme.html"><code>theme_dark()</code></a>, <a href="https://ggplot2.tidyverse.org/reference/ggtheme.html"><code>theme_light()</code></a> <a href="https://ggplot2.tidyverse.org/reference/ggtheme.html"><code>theme_grey()</code></a>, <a href="https://ggplot2.tidyverse.org/reference/ggtheme.html"><code>theme_bw()</code></a> among others</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># scatterplot</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>age_death_plot <span class="ot">&lt;-</span> </span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">data =</span> c19_df,   <span class="co"># set data</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(     <span class="co"># map aesthetics to column values</span></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> age,           <span class="co"># map x-axis to age            </span></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> duration_toDeath,         <span class="co"># map y-axis to weight</span></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">color =</span> state)</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>       )<span class="sc">+</span>     <span class="co"># map color to age</span></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">0.5</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>)   <span class="sc">+</span></span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="manual-theme" class="level5">
+<h5 class="anchored" data-anchor-id="manual-theme">Manual theme</h5>
+<p>Adjust each tiny aspect of the plot individually within <a href="https://ggplot2.tidyverse.org/reference/theme.html"><code>theme()</code></a></p>
+<p>Here are some especially common <a href="https://ggplot2.tidyverse.org/reference/theme.html"><code>theme()</code></a> arguments. You will recognize some patterns, such as appending <code>.x</code> or <code>.y</code> to apply the change only to one axis.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th><a href="https://ggplot2.tidyverse.org/reference/theme.html"><code>theme()</code></a> argument</th>
+<th>What it adjusts</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>plot.title = element_text()</code></td>
+<td>The title</td>
+</tr>
+<tr class="even">
+<td><code>plot.subtitle = element_text()</code></td>
+<td>The subtitle</td>
+</tr>
+<tr class="odd">
+<td><code>plot.caption = element_text()</code></td>
+<td>The caption (family, face, color, size, angle, vjust, hjust…)</td>
+</tr>
+<tr class="even">
+<td><code>axis.title = element_text()</code></td>
+<td>Axis titles (both x and y) (size, face, angle, color…)</td>
+</tr>
+<tr class="odd">
+<td><code>axis.title.x = element_text()</code></td>
+<td>Axis title x-axis only (use <code>.y</code> for y-axis only)</td>
+</tr>
+<tr class="even">
+<td><code>axis.text = element_text()</code></td>
+<td>Axis text (both x and y)</td>
+</tr>
+<tr class="odd">
+<td><code>axis.text.x = element_text()</code></td>
+<td>Axis text x-axis only (use <code>.y</code> for y-axis only)</td>
+</tr>
+<tr class="even">
+<td><code>axis.ticks = element_blank()</code></td>
+<td>Remove axis ticks</td>
+</tr>
+<tr class="odd">
+<td><code>axis.line = element_line()</code></td>
+<td>Axis lines (colour, size, linetype: solid dashed dotted etc)</td>
+</tr>
+<tr class="even">
+<td><code>strip.text = element_text()</code></td>
+<td>Facet strip text (colour, face, size, angle…)</td>
+</tr>
+<tr class="odd">
+<td><code>strip.background = element_rect()</code></td>
+<td>facet strip (fill, colour, size…)</td>
+</tr>
+</tbody>
+</table>
+<p>An example</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>age_death_plot <span class="sc">+</span>                               <span class="co"># pre-defined theme adjustments</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>,                    <span class="co"># move legend to bottom</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">30</span>),          <span class="co"># size of title to 30</span></span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>),        <span class="co"># left-align caption</span></span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"italic"</span>), <span class="co"># italicize subtitle</span></span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">15</span>, <span class="at">angle =</span> <span class="dv">90</span>), <span class="co"># adjusts only x-axis text</span></span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>),         <span class="co"># adjusts only y-axis text</span></span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>)           <span class="co"># adjusts both axes titles</span></span>
+<span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a>    )     </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="piping" class="level4">
+<h4 class="anchored" data-anchor-id="piping">Piping</h4>
+<p>We can directly edit a dataset within a ggplot</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(c19_df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(duration_toDeath<span class="sc">&lt;</span><span class="dv">50</span>),</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping=</span><span class="fu">aes</span>(<span class="at">x=</span>age, <span class="at">y=</span>duration_toDeath, <span class="at">colour=</span>age)) <span class="sc">+</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>But they can developed into something much more complex</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>c19_df <span class="sc">%&gt;%</span>                                                     <span class="co"># begin with linelist</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">c</span>(malaysian, bid)) <span class="sc">%&gt;%</span>     <span class="co"># select columns</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">status=</span><span class="fu">ifelse</span>(malaysian<span class="sc">==</span><span class="dv">1</span><span class="sc">&amp;</span>bid<span class="sc">==</span><span class="dv">1</span>, <span class="st">"Non-Malaysian BID"</span>,</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>                       <span class="fu">ifelse</span>(malaysian<span class="sc">==</span><span class="dv">0</span><span class="sc">&amp;</span>bid<span class="sc">==</span><span class="dv">1</span>, <span class="st">"Malaysian BID"</span>,</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>                              <span class="fu">ifelse</span>(malaysian<span class="sc">==</span><span class="dv">1</span><span class="sc">&amp;</span>bid<span class="sc">==</span><span class="dv">0</span>, <span class="st">"Non-Malaysian Hospital death"</span>, <span class="st">"Malaysian Hospital death"</span>))),</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">id=</span><span class="fu">row_number</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(malaysian, bid)) <span class="sc">%&gt;%</span></span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(                                                  <span class="co"># pivot longer</span></span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="sc">-</span>id,                                  </span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"name"</span>,</span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"status"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(                                                        <span class="co"># replace missing values</span></span>
+<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">status =</span> <span class="fu">replace_na</span>(status, <span class="st">"unknown"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb49-15"><a href="#cb49-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(                                                        <span class="co"># begin ggplot!</span></span>
+<span id="cb49-16"><a href="#cb49-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> name, <span class="at">fill =</span> status))<span class="sc">+</span></span>
+<span id="cb49-17"><a href="#cb49-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"fill"</span>, <span class="at">col =</span> <span class="st">"black"</span>) <span class="sc">+</span>                    </span>
+<span id="cb49-18"><a href="#cb49-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb49-19"><a href="#cb49-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb49-20"><a href="#cb49-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Nationality and Death Status"</span>,</span>
+<span id="cb49-21"><a href="#cb49-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Nationality and Death Status (proportion)"</span></span>
+<span id="cb49-22"><a href="#cb49-22" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="labels" class="level4">
+<h4 class="anchored" data-anchor-id="labels">Labels</h4>
+<p>We can use <code>labs()</code> to provide character strings to these arguements:</p>
+<ul>
+<li><p><code>x =</code> and <code>y =</code> The x-axis and y-axis title (labels)<br>
+</p></li>
+<li><p><code>title =</code> The main plot title<br>
+</p></li>
+<li><p><code>subtitle =</code> The subtitle of the plot, in smaller text below the title<br>
+</p></li>
+<li><p><code>caption =</code> The caption of the plot, in bottom-right by default</p></li>
+</ul>
+<p>Here is a plot we made earlier, but with nicer labels:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># scatterplot</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>age_death_plot <span class="ot">&lt;-</span> </span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">data =</span> c19_df,   <span class="co"># set data</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(     <span class="co"># map aesthetics to column values</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> age,           <span class="co"># map x-axis to age            </span></span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> duration_toDeath,         <span class="co"># map y-axis to weight</span></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">color =</span> state)</span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>       )<span class="sc">+</span>     <span class="co"># map color to age</span></span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">0.5</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>)   <span class="sc">+</span>     </span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Age and Duration to Death distribution"</span>,</span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"COVID-19 Pandemic in Malaysia, 2020-2023"</span>,</span>
+<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Age (years)"</span>,</span>
+<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Duration to death (days)"</span>,</span>
+<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"State"</span>,</span>
+<span id="cb50-16"><a href="#cb50-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> stringr<span class="sc">::</span><span class="fu">str_glue</span>(<span class="st">"Data as of {max(c19_df$date, na.rm=T)}"</span>))</span>
+<span id="cb50-17"><a href="#cb50-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-18"><a href="#cb50-18" aria-hidden="true" tabindex="-1"></a>age_death_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="saving-and-exporting-plots" class="level4">
+<h4 class="anchored" data-anchor-id="saving-and-exporting-plots">Saving and exporting plots</h4>
+<p>By default when a ggplot is called it will print in the Rstudio pane or below the if a markdown is used ( as is here). A plot can (and should) be written to a object name (as is done with a dataset). This ensures it is transfered to the global environment.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define plot</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>age_death_plot <span class="ot">&lt;-</span> </span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> c19_df, </span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> duration_toDeath))<span class="sc">+</span>  <span class="co"># set data and axes mapping</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"firebrick2"</span>, <span class="at">size =</span> <span class="fl">0.5</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>)         <span class="co"># set static point aesthetics</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a><span class="co"># print</span></span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>age_death_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>A saved object can also be modified</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>age_death_plot <span class="sc">+</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">60</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_viz_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>And exported using the ggsave() command. We do this by specifying the name of the plot object, then the file path and name with extension</p>
+<p>For example: <code>ggsave(my_plot, here("plots", "my_plot.png"))</code></p>
+</section>
+<section id="keep-moving-forward" class="level4">
+<h4 class="anchored" data-anchor-id="keep-moving-forward">Keep moving forward</h4>
+<p>Plenty of other really powerful viz to consider and we will hopefully get to cover these in another sessions. These include</p>
+<ul>
+<li><p>Demographic pyramids</p></li>
+<li><p>Likert Scalesm</p></li>
+<li><p>Diagrams - Sankey</p></li>
+<li><p>Phylogenetic trees</p></li>
+<li><p>Network maps</p></li>
+<li><p>Interactive plots</p></li>
+<li><p>Choropleths and maps</p></li>
+</ul>
+</section>
+</section>
+<section id="acknowledgements" class="level3">
+<h3 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h3>
+<p>Material for this lecture was borrowed and adopted from</p>
+<ul>
+<li><p><a href="https://stephaniehicks.com/jhustatcomputing2022/" class="uri">https://stephaniehicks.com/jhustatcomputing2022/</a></p></li>
+<li><p><a href="https://kdpsingh.lab.medicine.umich.edu/lhs-610?s=09" class="uri">https://kdpsingh.lab.medicine.umich.edu/lhs-610?s=09</a></p></li>
+<li><p><a href="https://epirhandbook.com/en/index.html">The Epidemiologist R Handbook</a></p></li>
+</ul>
+</section>
+<section id="additional-resources" class="level3">
+<h3 class="anchored" data-anchor-id="additional-resources">Additional Resources</h3>
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><p><a href="http://socviz.co/">Data Visualization</a></p></li>
+<li><p><a href="http://moderngraphics11.pbworks.com/f/ggplot2-Book09hWickham.pdf">Elegant Graphics for Data Analysis</a></p></li>
+<li><p><a href="https://r-graph-gallery.com/" class="uri">https://r-graph-gallery.com/</a></p></li>
+</ul>
+</div>
+</div>
+</section>
+<section id="section-1" class="level2">
+<h2 class="anchored" data-anchor-id="section-1"></h2>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

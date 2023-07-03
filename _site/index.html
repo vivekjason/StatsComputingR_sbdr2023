@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.189">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Statistical Computing in R 2023 -</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Statistical Computing in R 2023</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="./index.html" aria-current="page">Home</a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-lectures" role="button" data-bs-toggle="dropdown" aria-expanded="false">Lectures</a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-lectures">    
+        <li>
+    <a class="dropdown-item" href="./introduction_R.html">
+ <span class="dropdown-text">Introduction</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./data_wranggling.html">
+ <span class="dropdown-text">Data Wranggling</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./data_viz.html">
+ <span class="dropdown-text">Data Visualisation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./inferential_stats.html">
+ <span class="dropdown-text">Inferential Statistics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./regression.html">
+ <span class="dropdown-text">Regression</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tutorials" role="button" data-bs-toggle="dropdown" aria-expanded="false">Tutorials</a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-tutorials">    
+        <li>
+    <a class="dropdown-item" href="./data_wranggling_tutorial.html">
+ <span class="dropdown-text">Data Wranggling</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./data_viz_tutorial.html">
+ <span class="dropdown-text">Data Visualisation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./inferential_stats_tutorial.html">
+ <span class="dropdown-text">Inferential Statistics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./regression_tutorial.html">
+ <span class="dropdown-text">Regression</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-solutions" role="button" data-bs-toggle="dropdown" aria-expanded="false">Solutions</a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-solutions">    
+        <li>
+    <a class="dropdown-item" href="./data_wranggling_solutions.html">
+ <span class="dropdown-text">Data Wranggling</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./data_viz_solutions.html">
+ <span class="dropdown-text">Data Visualisation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./inferential_stats_solutions.html">
+ <span class="dropdown-text">Inferential Statistics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./regression_solutions.html">
+ <span class="dropdown-text">Regression</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/vivekjason"><i class="bi bi-github" role="img">
+</i> 
+ </a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/vivekjason87"><i class="bi bi-twitter" role="img">
+</i> 
+ </a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="./index.xml"><i class="bi bi-rss" role="img">
+</i> 
+ </a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#welcome-to-statistical-computing-in-r" id="toc-welcome-to-statistical-computing-in-r" class="nav-link active" data-scroll-target="#welcome-to-statistical-computing-in-r"><strong>Welcome to Statistical Computing in R!</strong></a>
+  <ul class="collapse">
+  <li><a href="#what-is-this-workshop" id="toc-what-is-this-workshop" class="nav-link" data-scroll-target="#what-is-this-workshop"><strong>What is this workshop?</strong></a></li>
+  <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started"><strong>Getting started</strong></a></li>
+  <li><a href="#schedule-and-materials" id="toc-schedule-and-materials" class="nav-link" data-scroll-target="#schedule-and-materials">Schedule and Materials</a></li>
+  <li><a href="#speakers" id="toc-speakers" class="nav-link" data-scroll-target="#speakers">Speakers</a></li>
+  <li><a href="#acknowledgements" id="toc-acknowledgements" class="nav-link" data-scroll-target="#acknowledgements"><strong>Acknowledgements</strong></a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+
+<section id="welcome-to-statistical-computing-in-r" class="level1">
+<h1><strong>Welcome to Statistical Computing in R!</strong></h1>
+<p>Welcome to the <strong>Statistical Computing in R! for Beginners to Intermediates</strong> organised by the Sector for Biostatistics and Data Repository, National Institutes of Health, Malaysia</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/banner.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+<section id="what-is-this-workshop" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-this-workshop"><strong>What is this workshop?</strong></h2>
+<p>This workshop lays the groundwork for addressing key practical aspects of programming and other essential computer skills needed for both research and implementation of statistical methods. The course offers an introduction to programming in R and the tidyverse, guidance on coding best practices, a primer on data visualization and data wrangling, as well as an exploration of both descriptive and inferential statistics using R. Additionally, the workshop also introduces the concept of regression analysis in R.</p>
+</section>
+<section id="getting-started" class="level2">
+<h2 class="anchored" data-anchor-id="getting-started"><strong>Getting started</strong></h2>
+<p>Have a look at the schedule below and download the necessary .qmd files for each session. While I have included solutions- it would be way more beneficial to attempt these yourself first. Lets try to maximise learning in the next two days.</p>
+<p>If you are new to R, don’t worry - start of with this <a href="./lectures/[0]installation.html">deck</a> to learn how to install the software and familiarise yourself with the environment.</p>
+</section>
+<section id="schedule-and-materials" class="level2">
+<h2 class="anchored" data-anchor-id="schedule-and-materials">Schedule and Materials</h2>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Date</th>
+<th style="text-align: left;">Time</th>
+<th style="text-align: left;">Topic</th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">10.7.2022 (Monday)</td>
+<td style="text-align: left;">08.30 am - 09.00 am</td>
+<td style="text-align: left;">Registration</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">9.00 am - 10.00 am</td>
+<td style="text-align: left;"><a href="./lectures/introduction_R.qmd">Introduction to R Software</a></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">10.00 am - 12.30 pm</td>
+<td style="text-align: left;"><a href="./lectures/data_wranggling.qmd">Data wrangling</a> | <a href="./tutorials/data_wranggling_tutorial.qmd">Tutorial</a> | <a href="./solutions/data_wranggling_solutions.qmd">Solutions</a></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">12.30 pm - 02.00 pm</td>
+<td style="text-align: left;">Break</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">02.00 pm - 04.30 pm</td>
+<td style="text-align: left;"><a href="./lectures/data_viz.qmd">Data Visualization</a> | <a href="./tutorials/data_viz_tutorial.qmd">Tutorial</a> | <a href="./solutions/data_viz_solutions.qmd">Solutions</a></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">11.7.2022 (Tuesday)</td>
+<td style="text-align: left;">08.00 am – 08.30 am</td>
+<td style="text-align: left;">Registration</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">08.30 am - 11.30 am</td>
+<td style="text-align: left;"><a href="./lectures/inferential_stats.qmd">Hypothesis testing</a> | <a href="./tutorials/inferential_stats_tutorial.qmd">Tutorial</a> | <a href="./solutions/inferential_stats_solutions.qmd">Solutions</a></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">1.00 pm - 02.15 pm</td>
+<td style="text-align: left;">Break</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">02.15 pm - 04.30 pm</td>
+<td style="text-align: left;"><a href="./lectures/regression.qmd">Introduction to Regression</a> | <a href="./tutorials/regression_tutorial.qmd">Tutorial</a> | <a href="./solutions/regression_solutions.qmd">Solutions</a></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">04.30 pm - 05.00 pm</td>
+<td style="text-align: left;">Q&amp;A</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="speakers" class="level2">
+<h2 class="anchored" data-anchor-id="speakers">Speakers</h2>
+<div class="quarto-figure quarto-figure-left">
+<figure class="figure">
+<p><img src="images/1688354405314.png" class="img-fluid figure-img" style="width:2in"></p>
+</figure>
+</div>
+<p><strong>Vivek Jason</strong></p>
+<p>Jason is a gazetting Public Health Physician passionate about epidemiology, infectious diseases and data science. He spends his time between coding, parenting a toddler and pondering the fate of the universe.</p>
+<div class="quarto-figure quarto-figure-left">
+<figure class="figure">
+<p><img src="images/1688352291610.png" class="img-fluid figure-img" style="width:2in"></p>
+</figure>
+</div>
+<p><strong>Ang Swee Hung</strong></p>
+<p>Swee Hung is a training Public Health Physician from the Institute for Clinical research that works heavily in the fields of non-communicable disease epidemiology. Renowned for her calmness under pressure- Swee Hung also enjoys the serenity of long drives and the excitement of travelling. Her next destination is Shanghai.</p>
+<div class="quarto-figure quarto-figure-left">
+<figure class="figure">
+<p><img src="images/1688352450596.png" class="img-fluid figure-img" style="width:2in"></p>
+</figure>
+</div>
+<p><strong>Evi Diana</strong></p>
+<p>Evi is a statistician with vast expertise in complex sample analysis and clustering. The only person whose math you should trust in this workshop- Evi always has a smile on her face.</p>
+</section>
+<section id="acknowledgements" class="level2">
+<h2 class="anchored" data-anchor-id="acknowledgements"><strong>Acknowledgements</strong></h2>
+<p>This course was developed and is maintained by <a href="https://github.com/vivekjason">Vivek Jason</a>.</p>
+<p>The following individuals have contributed to improving the course or materials have been adapted from their courses: <a href="https://epirhandbook.com/en/">R for Applied Epidemiology and Public Health</a>, <a href="https://www.stephaniehicks.com/">Stephanie Hicks</a>, <a href="https://github.com/rdpeng">Roger D. Peng</a>, <a href="https://naimurashid.github.io/">Naim Rashid</a>.</p>
+<p>The course materials are licensed under the <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>. Linked and embedded materials are governed by their own licenses. I assume that all external materials used or embedded here are covered under the educational fair use policy. If this is not the case and any material displayed here violates copyright, please let me know and I will remove it.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

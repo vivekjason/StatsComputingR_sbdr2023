@@ -1,0 +1,71 @@
+---
+title: "Practical Statistics 4: Progression to Regression: An Introduction Regression"
+format: html
+editor: visual
+---
+
+### **Task 1: Univariate Linear Regression**
+
+Question: Perform a univariate linear regression to predict "age" using the "male" variable.
+
+Steps:
+
+1.  Install and load the required packages: tidyverse and broom.
+
+2.  Filter the dataset to remove missing values in the "age" and "male" columns.
+
+3.  Fit a univariate linear regression model using the `lm()` function.
+
+4.  Summarise the model using `tidy()` from the broom package.
+
+### **Task 2: Multivariate Linear Regression**
+
+Question: Perform a multivariate linear regression to predict "age" using the "male" and "malaysian" variables.
+
+Steps:
+
+1.  Filter the dataset to remove missing values in the relevant columns.
+
+2.  Fit a multivariate linear regression model using the `lm()` function.
+
+3.  Summarise the model using `gtsummary()`.
+
+4.  Save the output as a document
+
+### **Task 3: Univariate Logistic Regression**
+
+Question: Perform a univariate logistic regression to predict "male" (binarize to 0 and 1) using the "age" variable.
+
+Steps:
+
+1.  Filter the dataset to remove missing values in the relevant columns.
+
+2.  Fit a univariate logistic regression model using the `glm()` function, specifying the family as "binomial".
+
+3.  Summarise the model using `tidy()`.
+
+### **Task 4: Multivariate Logistic Regression**
+
+Question: Perform a multivariate logistic regression to predict "male" using the "age" and "malaysian" variables.
+
+Steps:
+
+1.  Filter the dataset to remove missing values in the relevant columns.
+
+2.  Fit a multivariate logistic regression model using the `glm()` function, specifying the family as "binomial".
+
+3.  Summarise the model using `gtsummary()`.
+
+4.  Save the output as a document
+
+### **Task 5: Model Evaluation**
+
+Question: Evaluate the logistic regression model from Task 4 using AUC-ROC.
+
+Steps:
+
+1.  Install and load the pROC package (Note: Upon up the documentation to figure out the nuts and bolts.)
+
+2.  Use the predict() function to get the predicted probabilities from the logistic regression model.
+
+3.  Use the roc() function to compute the AUC-ROC.

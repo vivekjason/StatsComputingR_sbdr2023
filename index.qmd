@@ -1,11 +1,62 @@
 ---
-title: "StatsComputingR_sbdr2023"
+title: " "
 ---
 
-This is a Quarto website.
+# **Welcome to Statistical Computing in R!**
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+Welcome to the **Statistical Computing in R! for Beginners to Intermediates** organised by the Sector for Biostatistics and Data Repository, National Institutes of Health, Malaysia
 
-```{r}
-1 + 1
-```
+![](images/banner.png){fig-align="center"}
+
+## **What is this workshop?**
+
+This workshop lays the groundwork for addressing key practical aspects of programming and other essential computer skills needed for both research and implementation of statistical methods. The course offers an introduction to programming in R and the tidyverse, guidance on coding best practices, a primer on data visualization and data wrangling, as well as an exploration of both descriptive and inferential statistics using R. Additionally, the workshop also introduces the concept of regression analysis in R.
+
+## **Getting started**
+
+Have a look at the schedule below and download the necessary .qmd files for each session. While I have included solutions- it would be way more beneficial to attempt these yourself first. Lets try to maximise learning in the next two days.
+
+If you are new to R, don't worry - start of with this [deck](/lectures/[0]installation.html) to learn how to install the software and familiarise yourself with the environment.
+
+## Schedule and Materials
+
+| Date                | Time                 | Topic                                                                                                                                                                      |     |     |     |
+|:--------------------|:---------------------|:--------------------------|---------------------------|---------------------------|--|
+| 10.7.2022 (Monday)  | 08.30 am - 09.00 am  | Registration                                                                                                                                                               |     |     |     |
+|                     | 9.00 am - 10.00 am   | [Introduction to R Software](/lectures/introduction_R.qmd)                                                                                                                 |     |     |     |
+|                     | 10.00 am - 12.30 pm  | [Data wrangling](/lectures/data_wranggling.qmd) \| [Tutorial](/tutorials/data_wranggling_tutorial.qmd) \| [Solutions](/solutions/data_wranggling_solutions.qmd)            |     |     |     |
+|                     | 12.30 pm - 02.00 pm  | Break                                                                                                                                                                      |     |     |     |
+|                     | 02.00 pm - 04.30 pm  | [Data Visualization](/lectures/data_viz.qmd) \| [Tutorial](/tutorials/data_viz_tutorial.qmd) \| [Solutions](/solutions/data_viz_solutions.qmd)                             |     |     |     |
+| 11.7.2022 (Tuesday) | 08.00 am -- 08.30 am | Registration                                                                                                                                                               |     |     |     |
+|                     | 08.30 am - 11.30 am  | [Hypothesis testing](/lectures/inferential_stats.qmd) \| [Tutorial](/tutorials/inferential_stats_tutorial.qmd) \| [Solutions](/solutions/inferential_stats_solutions.qmd)  |     |     |     |
+|                     | 1.00 pm - 02.15 pm   | Break                                                                                                                                                                      |     |     |     |
+|                     | 02.15 pm - 04.30 pm  | [Introduction to Regression](/lectures/regression.qmd) \| [Tutorial](/tutorials/regression_tutorial.qmd) \| [Solutions](/solutions/regression_solutions.qmd)               |     |     |     |
+|                     | 04.30 pm - 05.00 pm  | Q&A                                                                                                                                                                        |     |     |     |
+
+## Speakers
+
+![](images/1688354405314.png){fig-align="left" width="2in"}
+
+**Vivek Jason**
+
+Jason is a gazetting Public Health Physician passionate about epidemiology, infectious diseases and data science. He spends his time between coding, parenting a toddler and pondering the fate of the universe.
+
+![](images/1688352291610.png){fig-align="left" width="2in"}
+
+**Ang Swee Hung**
+
+Swee Hung is a training Public Health Physician from the Institute for Clinical research that works heavily in the fields of non-communicable disease epidemiology. Renowned for her calmness under pressure- Swee Hung also enjoys the serenity of long drives and the excitement of travelling. Her next destination is Shanghai.
+
+![](images/1688352450596.png){fig-align="left" width="2in"}
+
+**Evi Diana**
+
+Evi is a statistician with vast expertise in complex sample analysis and clustering. The only person whose math you should trust in this workshop- Evi always has a smile on her face.
+
+## **Acknowledgements**
+
+This course was developed and is maintained by [Vivek Jason](https://github.com/vivekjason).
+
+The following individuals have contributed to improving the course or materials have been adapted from their courses: [R for Applied Epidemiology and Public Health](https://epirhandbook.com/en/), [Stephanie Hicks](https://www.stephaniehicks.com/), [Roger D. Peng](https://github.com/rdpeng), [Naim Rashid](https://naimurashid.github.io/).
+
+The course materials are licensed under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-nc-sa/4.0/). Linked and embedded materials are governed by their own licenses. I assume that all external materials used or embedded here are covered under the educational fair use policy. If this is not the case and any material displayed here violates copyright, please let me know and I will remove it.

@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.189">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Vivek Jason">
+
+<title>Statistical Computing in R 2023 - Practical session 1: Untangling Data with Tidyverse: Data wranggling in R</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Statistical Computing in R 2023</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html">Home</a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-lectures" role="button" data-bs-toggle="dropdown" aria-expanded="false">Lectures</a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-lectures">    
+        <li>
+    <a class="dropdown-item" href="//lectures/introduction_R.html">
+ <span class="dropdown-text">Introduction</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="//lectures/data_wranggling.html">
+ <span class="dropdown-text">Data Wranggling</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="//lectures/data_viz.html">
+ <span class="dropdown-text">Data Visulisation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="//lectures/inferential_stats.html">
+ <span class="dropdown-text">Inferential Statistics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="//lectures/regression.html">
+ <span class="dropdown-text">Regression</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tutorials" role="button" data-bs-toggle="dropdown" aria-expanded="false">Tutorials</a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-tutorials">    
+        <li>
+    <a class="dropdown-item" href="//tutorials/data_wranggling_tutorial.html">
+ <span class="dropdown-text">Data Wranggling</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="//tutorials/data_viz_tutorial.html">
+ <span class="dropdown-text">Data Visulisation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="//tutorials/inferential_stats_tutorial.html">
+ <span class="dropdown-text">Inferential Statistics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="//tutorials/regression_tutorial.html">
+ <span class="dropdown-text">Regression</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-solutions" role="button" data-bs-toggle="dropdown" aria-expanded="false">Solutions</a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-solutions">    
+        <li>
+    <a class="dropdown-item" href="//solutions/data_wranggling_solutions.html">
+ <span class="dropdown-text">Data Wranggling</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="//solutions/data_viz_solutions.html">
+ <span class="dropdown-text">Data Visulisation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="//solutions/inferential_stats_solutions.html">
+ <span class="dropdown-text">Inferential Statistics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="//solutions/regression_solutions.html">
+ <span class="dropdown-text">Regression</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/vivekjason"><i class="bi bi-github" role="img">
+</i> 
+ </a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/vivekjason87"><i class="bi bi-twitter" role="img">
+</i> 
+ </a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../index.xml"><i class="bi bi-rss" role="img">
+</i> 
+ </a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#covid-19-vaccinations-and-death-in-malaysia" id="toc-covid-19-vaccinations-and-death-in-malaysia" class="nav-link active" data-scroll-target="#covid-19-vaccinations-and-death-in-malaysia">COVID-19 Vaccinations and Death in Malaysia</a></li>
+  <li><a href="#task-1-calculate-the-average-age-for-deaths-by-state-and-find-the-state-with-the-highest-average-age." id="toc-task-1-calculate-the-average-age-for-deaths-by-state-and-find-the-state-with-the-highest-average-age." class="nav-link" data-scroll-target="#task-1-calculate-the-average-age-for-deaths-by-state-and-find-the-state-with-the-highest-average-age.">Task 1: Calculate the average age for deaths by state and find the state with the highest average age.</a></li>
+  <li><a href="#task-2-determine-the-proportion-of-male-to-female-deaths-in-each-state." id="toc-task-2-determine-the-proportion-of-male-to-female-deaths-in-each-state." class="nav-link" data-scroll-target="#task-2-determine-the-proportion-of-male-to-female-deaths-in-each-state.">Task 2: Determine the proportion of male to female deaths in each state.</a></li>
+  <li><a href="#task-3-determine-the-total-number-of-deaths-by-month-and-year." id="toc-task-3-determine-the-total-number-of-deaths-by-month-and-year." class="nav-link" data-scroll-target="#task-3-determine-the-total-number-of-deaths-by-month-and-year.">Task 3: Determine the total number of deaths by month and year.</a></li>
+  <li><a href="#task-4-determine-if-comorbidities-are-more-common-in-malaysian-or-non-malaysian-deaths." id="toc-task-4-determine-if-comorbidities-are-more-common-in-malaysian-or-non-malaysian-deaths." class="nav-link" data-scroll-target="#task-4-determine-if-comorbidities-are-more-common-in-malaysian-or-non-malaysian-deaths.">Task 4: Determine if comorbidities are more common in Malaysian or non-Malaysian deaths.</a></li>
+  <li><a href="#task-5-find-out-the-most-common-vaccine-brand-combination-that-was-administered." id="toc-task-5-find-out-the-most-common-vaccine-brand-combination-that-was-administered." class="nav-link" data-scroll-target="#task-5-find-out-the-most-common-vaccine-brand-combination-that-was-administered.">Task 5: Find out the most common vaccine brand combination that was administered.</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Practical session 1: Untangling Data with Tidyverse: Data wranggling in R</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Vivek Jason </p>
+          </div>
+  </div>
+    
+    
+  </div>
+  
+
+</header>
+
+<section id="covid-19-vaccinations-and-death-in-malaysia" class="level3">
+<h3 class="anchored" data-anchor-id="covid-19-vaccinations-and-death-in-malaysia">COVID-19 Vaccinations and Death in Malaysia</h3>
+</section>
+<section id="task-1-calculate-the-average-age-for-deaths-by-state-and-find-the-state-with-the-highest-average-age." class="level3">
+<h3 class="anchored" data-anchor-id="task-1-calculate-the-average-age-for-deaths-by-state-and-find-the-state-with-the-highest-average-age.">Task 1: Calculate the average age for deaths by state and find the state with the highest average age.</h3>
+<p>Steps:</p>
+<ol type="1">
+<li><p>First, we need to group the data by <code>state</code>.</p></li>
+<li><p>Then, we can summarize the average age per state using <code>summarise</code>.</p></li>
+<li><p>Use <code>arrange</code> to sort the average age in descending order to find the state with the highest average age.</p></li>
+</ol>
+<p>Solution:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>c19_df <span class="sc">%&gt;%</span> </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(state) <span class="sc">%&gt;%</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">avg_age =</span> <span class="fu">mean</span>(age, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(avg_age))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 16 × 2
+   state             avg_age
+   &lt;chr&gt;               &lt;dbl&gt;
+ 1 Perlis               68.1
+ 2 Sarawak              68.1
+ 3 Perak                66.9
+ 4 Kelantan             66.7
+ 5 Pulau Pinang         66.0
+ 6 Sabah                65.4
+ 7 Terengganu           64.9
+ 8 W.P. Putrajaya       64.7
+ 9 Negeri Sembilan      64.5
+10 Pahang               63.2
+11 Kedah                63.1
+12 Melaka               62.2
+13 W.P. Kuala Lumpur    61.7
+14 Johor                60.9
+15 Selangor             59.4
+16 W.P. Labuan          59.3</code></pre>
+</div>
+</div>
+</section>
+<section id="task-2-determine-the-proportion-of-male-to-female-deaths-in-each-state." class="level3">
+<h3 class="anchored" data-anchor-id="task-2-determine-the-proportion-of-male-to-female-deaths-in-each-state.">Task 2: Determine the proportion of male to female deaths in each state.</h3>
+<p>Steps:</p>
+<ol type="1">
+<li><p>Using <code>mutate</code>, create a new column called <code>gender</code> using <code>ifelse</code> to convert the <code>male</code> column to ‘Male’ and ‘Female’.</p></li>
+<li><p>Group the data by <code>state</code> and <code>gender</code>.</p></li>
+<li><p>Summarise the count of each gender in each state.</p></li>
+<li><p>Create a new column with the proportion of each gender in each state.</p></li>
+</ol>
+<p>Solution:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>c19_df <span class="sc">%&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gender =</span> <span class="fu">ifelse</span>(male <span class="sc">==</span> <span class="dv">1</span>, <span class="st">"Male"</span>, <span class="st">"Female"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(state, gender) <span class="sc">%&gt;%</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">count =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">proportion =</span> count <span class="sc">/</span> <span class="fu">sum</span>(count))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'state'. You can override using the
+`.groups` argument.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 32 × 4
+# Groups:   state [16]
+   state           gender count proportion
+   &lt;chr&gt;           &lt;chr&gt;  &lt;int&gt;      &lt;dbl&gt;
+ 1 Johor           Female  2096      0.442
+ 2 Johor           Male    2644      0.558
+ 3 Kedah           Female  1280      0.464
+ 4 Kedah           Male    1476      0.536
+ 5 Kelantan        Female   707      0.495
+ 6 Kelantan        Male     721      0.505
+ 7 Melaka          Female   529      0.436
+ 8 Melaka          Male     684      0.564
+ 9 Negeri Sembilan Female   675      0.437
+10 Negeri Sembilan Male     871      0.563
+# ℹ 22 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="task-3-determine-the-total-number-of-deaths-by-month-and-year." class="level3">
+<h3 class="anchored" data-anchor-id="task-3-determine-the-total-number-of-deaths-by-month-and-year.">Task 3: Determine the total number of deaths by month and year.</h3>
+<p>Steps:</p>
+<ol type="1">
+<li><p>Convert the <code>date</code> column to Date type if it’s not already.</p></li>
+<li><p>Use <code>mutate</code> to create new columns <code>year</code> and <code>month</code> using the <code>year</code> and <code>month</code> functions from the <code>lubridate</code> package.</p></li>
+<li><p>Group the data by <code>year</code> and <code>month</code>.</p></li>
+<li><p>Use <code>summarise</code> to count the number of deaths.</p></li>
+</ol>
+<p>Solution:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>c19_df <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(date),</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">year =</span> <span class="fu">year</span>(date),</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">month =</span> <span class="fu">month</span>(date)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year, month) <span class="sc">%&gt;%</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">deaths =</span> <span class="fu">n</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'year'. You can override using the
+`.groups` argument.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 40 × 3
+# Groups:   year [4]
+    year month deaths
+   &lt;dbl&gt; &lt;dbl&gt;  &lt;int&gt;
+ 1  2020     3     48
+ 2  2020     4     55
+ 3  2020     5     12
+ 4  2020     6      6
+ 5  2020     7      4
+ 6  2020     8      3
+ 7  2020     9     10
+ 8  2020    10    129
+ 9  2020    11    116
+10  2020    12    133
+# ℹ 30 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="task-4-determine-if-comorbidities-are-more-common-in-malaysian-or-non-malaysian-deaths." class="level3">
+<h3 class="anchored" data-anchor-id="task-4-determine-if-comorbidities-are-more-common-in-malaysian-or-non-malaysian-deaths.">Task 4: Determine if comorbidities are more common in Malaysian or non-Malaysian deaths.</h3>
+<p>Steps:</p>
+<ol type="1">
+<li><p>Create a new column <code>nationality</code> that categorizes <code>malaysian</code> into ‘Malaysian’ and ‘Non-Malaysian’ using <code>mutate</code> and <code>ifelse</code>.</p></li>
+<li><p>Group by <code>nationality</code>.</p></li>
+<li><p>Summarise the average comorbidity rate (<code>comorb</code>).</p></li>
+</ol>
+<p>Solution:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>c19_df <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nationality =</span> <span class="fu">ifelse</span>(malaysian <span class="sc">==</span> <span class="dv">1</span>, <span class="st">"Malaysian"</span>, <span class="st">"Non-Malaysian"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(nationality) <span class="sc">%&gt;%</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">avg_comorb =</span> <span class="fu">mean</span>(comorb, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 2
+  nationality   avg_comorb
+  &lt;chr&gt;              &lt;dbl&gt;
+1 Malaysian          0.827
+2 Non-Malaysian      0.461</code></pre>
+</div>
+</div>
+</section>
+<section id="task-5-find-out-the-most-common-vaccine-brand-combination-that-was-administered." class="level3">
+<h3 class="anchored" data-anchor-id="task-5-find-out-the-most-common-vaccine-brand-combination-that-was-administered.">Task 5: Find out the most common vaccine brand combination that was administered.</h3>
+<p>Steps:</p>
+<ol type="1">
+<li><p>Use <code>mutate</code> to create a new column <code>brands_combo</code> that concatenates <code>brand1</code>, <code>brand2</code>, and <code>brand3</code>.</p></li>
+<li><p><code>filter</code> to keep only those rows where <code>brands_combo</code> is not empty.</p></li>
+<li><p>Group by <code>brands_combo</code>.</p></li>
+<li><p>Count the number of occurrences for each vaccine brand combination using <code>summarise</code>.</p></li>
+</ol>
+<p>Solution:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>c19_df <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unite</span>(<span class="at">col=</span><span class="st">"profile"</span>, </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>        brand1<span class="sc">:</span>brand3, </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">sep=</span><span class="st">"_"</span>)  <span class="sc">%&gt;%</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(profile <span class="sc">!=</span> <span class="st">"--"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(profile) <span class="sc">%&gt;%</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">count =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(count))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 32 × 2
+   profile                  count
+   &lt;chr&gt;                    &lt;int&gt;
+ 1 __                       22437
+ 2 Sinovac_Sinovac_          4693
+ 3 Pfizer_Pfizer_            2733
+ 4 Sinovac__                 2672
+ 5 Pfizer__                  2141
+ 6 AstraZeneca__              707
+ 7 Pfizer_Pfizer_Pfizer       591
+ 8 Sinovac_Sinovac_Pfizer     548
+ 9 AstraZeneca_AstraZeneca_   242
+10 Sinovac_Sinovac_Sinovac    145
+# ℹ 22 more rows</code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

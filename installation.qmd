@@ -1,0 +1,113 @@
+---
+title: "Setup R in your System"
+author: "Vivek Jason"
+format: revealjs
+editor: visual
+---
+
+## Topics Covered
+
+1\. Installing R
+
+2\. Installing RStudio
+
+3\. Installing the tidyverse package
+
+4\. Using R Tools for package installation and updates
+
+## What is R?
+
+R is a programming language and software environment for statistical computing and graphics.
+
+## Installing R - Step 1
+
+1.  Visit the Comprehensive R Archive Network (CRAN) at <https://cran.r-project.org/>.
+
+![](images/CRANlogo.png){fig-align="center"}
+
+## Installing R - Step 2
+
+2.  Choose your operating system (Windows, OS X, Linux).
+3.  Click on "base" or the latest version.
+4.  Download and install it.
+
+## What is RStudio?
+
+RStudio is an integrated development environment (IDE) for R. It makes it easier to write and manage your R code.
+
+## Installing RStudio - Step 1
+
+Visit <https://www.rstudio.com/products/rstudio/download/> and click on the "Download" button under RStudio Desktop.
+
+![](images/RStudio-Logo-Flat.png){fig-align="center"}
+
+## Installing RStudio - Step 2
+
+1.  Choose your operating system.
+2.  Download and install it.
+
+## What is Tidyverse?
+
+Tidyverse is a collection of R packages designed for data science. All packages share an underlying design philosophy and grammar.
+
+## Installing the Tidyverse Package
+
+To install the tidyverse package, run the following command in the RStudio console:
+
+```{r, echo=TRUE}
+install.packages("tidyverse", repos = "http://cran.us.r-project.org")
+```
+
+## **Loading the Tidyverse Package**
+
+After installation, you can load the tidyverse package with:
+
+```{r, echo=TRUE}
+library(tidyverse)
+```
+
+## **Introduction to R Tools**
+
+R Tools is a collection of tools that integrates nicely with R and RStudio. It's essential for developing packages and includes tools like gcc and make.
+
+Please note that as of 2021, RTools has been superseded by RTools40 for R versions 4.0.0 and onwards. The install process is similar but you should consult the most up-to-date resources.
+
+## Why RTools?
+
+\- Needed if you plan to create your own R packages
+
+\- Useful if you want to install a development version of a package hosted on GitHub
+
+## Installing RTools - Step 1
+
+Visit CRAN's RTools download page at <https://cran.r-project.org/bin/windows/Rtools/>.
+
+![](images/100736708_101114164967102_7137626456380669952_n.png){fig-align="center"}
+
+## Installing RTools - Step 2
+
+1.  Download the appropriate RTools installer for your version of R. Check your R version by running \`R.version.string\` in your R console.
+2.  Run the installer and follow the instructions. Make sure to check the box that says "Edit the system PATH".
+3.  Restart RStudio so the changes take effect.
+
+## Verifying RTools Installation
+
+In RStudio, run the following command:
+
+```{r, echo=TRUE}
+Sys.which("make")
+```
+
+If RTools was installed correctly, it should show the path to the \`make\` executable.
+
+## Using RTools
+
+Now, you can use the \`install.packages()\` function to install packages from source or the \`devtools::install_github()\` function to install packages from GitHub.
+
+```{r, echo=TRUE}
+# install.packages("package_name", type = "source")
+
+# devtools::install_github("username/package_name")
+```
+
+\

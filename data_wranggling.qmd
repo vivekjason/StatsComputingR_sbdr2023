@@ -1,0 +1,628 @@
+---
+title: "Untangling Data with Tidyverse: Data wranggling in R"
+format: 
+  html:
+    theme: minty
+    toc: true
+    toc_float: true
+editor: visual
+---
+
+![](/images/banner.png)
+
+Data cleaning is arguably the most crucial step in the data analysis pipeline because it directly impacts the accuracy and reliability of insights drawn from the data.
+
+::: callout-note
+## Garbage in, garbage out, as the saying goes.
+:::
+
+Without thoroughly cleaning the data, we might be working with incorrect, inconsistent, or irrelevant information, leading to potentially faulty conclusions. Data cleaning ensures the data is correctly formatted, accurate, complete, and ready for analysis. It involves dealing with missing values, removing duplicates, correcting inconsistencies, and handling outliers. Only after a rigorous data cleaning process can we trust that our analysis or model will give us meaningful, actionable insights.
+
+Thus, while it can be a time-consuming process, skipping or skimping on data cleaning can lead to wasting even more time and resources downstream, as we try to interpret misleading results or troubleshoot models that aren't performing as expected.
+
+![](/images/1_Xhm9c9qDfXa3ZCQjiOvm_w.jpg)
+
+# The "Tidyverse"
+
+There are a number of R packages that take advantage of the tidy data form and can be used to do interesting things with data. Many (but not all) of these packages are written by Hadley Wickham and **the collection of packages is often referred to as the "tidyverse"** because of their **dependence on and presumption of tidy data**.
+
+A subset of the "Tidyverse" packages include:
+
+-   [ggplot2](https://cran.r-project.org/package=ggplot2): a plotting system based on the grammar of graphics
+
+-   [magrittr](https://cran.r-project.org/package=magrittr%22): defines the `%>%` operator for chaining functions together in a series of operations on data
+
+-   [dplyr](https://cran.r-project.org/package=dplyr): a suite of (fast) functions for working with data frames
+
+-   [tidyr](https://cran.r-project.org/package=tidyr): easily tidy data with `pivot_wider()` and `pivot_longer()` functions (also `separate()` and `unite()`)
+
+A complete list can be found here (<https://www.tidyverse.org/packages>).
+
+We can call in the tidyverse as mentioned in the introduction like this:
+
+```{r}
+library(tidyverse)
+```
+
+## Data Frames
+
+The **data frame** (or `data.frame`) is a **key data structure** in statistics and in R.
+
+The basic structure of a data frame is that there is **one observation per row and each column represents a variable, a measure, feature, or characteristic of that observation**.
+
+## Tibbles
+
+Another type of data structure that we need to discuss is called the **tibble**! It's best to think of tibbles as an updated and stylish version of the `data.frame`.
+
+Before we go any further, tibbles *are* data frames, but they have some new bells and whistles to make your life easier.
+
+### How tibbles differ from `data.frame`
+
+-   **Input type remains unchanged** - `data.frame` is notorious for treating strings as factors; this will not happen with tibbles
+-   **Variable names remain unchanged** - In base R, creating `data.frames` will remove spaces from names, converting them to periods or add "x" before numeric column names. Creating tibbles will not change variable (column) names.
+-   **There are no `row.names()` for a tibble** - Tidy data requires that variables be stored in a consistent way, removing the need for row names.
+-   **Tibbles print first ten rows and columns that fit on one screen** - Printing a tibble to screen will never print the entire huge data frame out. By default, it just shows what fits to your screen.
+
+### Converting to data.frame or tibble
+
+Use the `as.data.frame()` or `as_tibble()`
+
+### Calling in some data
+
+For the purposes of this session lets utilise the Malaysian COVID-19 deaths linelinest maintained by the Ministry of Health on their [Github page](https://github.com/MoH-Malaysia). Codes for each column are as follows:
+
+1.  `date`: yyyy-mm-dd format; date of death
+
+2.  `date_announced`: date on which the death was announced to the public (i.e. registered in the public linelist)
+
+3.  `date_positive`: date of positive sample
+
+4.  `date_doseN`: date of the individual's first/second/third dose (if any)
+
+5.  `brandN`: `p` = Pfizer, `s` = Sinovac, `a` = AstraZeneca, `c` = Cansino, `m` = Moderna, `h` = Sinopharm, `j` = Janssen, `u` = unverified (pending sync with VMS)
+
+6.  `state`: state of residence
+
+7.  `age`: age as an integer; note that it is possible for age to be 0, denoting infants less than 6 months old
+
+8.  `male`: binary variable with 1 denoting male and 0 denoting female
+
+9.  `bid`: binary variable with 1 denoting brought-in-dead and 0 denoting an inpatient death
+
+10. `malaysian`: binary variable with 1 denoting Malaysian and 0 denoting non-Malaysian
+
+11. `comorb`: binary variable with 1 denoting that the individual has comorbidities and 0 denoting no comorbidities declared
+
+Lets call in the data:
+
+```{r}
+c19_df <- read.csv("https://raw.githubusercontent.com/MoH-Malaysia/covid19-public/main/epidemic/linelist/linelist_deaths.csv")
+```
+
+Check the data structure
+
+```{r}
+str(c19_df)
+dim(c19_df)
+```
+
+# The `dplyr` Package
+
+The `dplyr` package was developed by Posit (formely RStudio) and is **an optimized and distilled** version of the older `plyr` **package for data manipulation or wrangling**.
+
+![Artwork by Allison Horst on the dplyr package](https://github.com/allisonhorst/stats-illustrations/raw/main/rstats-artwork/dplyr_wrangling.png){width="80%"}
+
+\[**Source**: [Artwork by Allison Horst](https://github.com/allisonhorst/stats-illustrations)\]
+
+The `dplyr` package does not provide any "new" functionality to R per se, in the sense that everything `dplyr` does could already be done with base R, but it **greatly** simplifies existing functionality in R.
+
+One important contribution of the `dplyr` package is that it **provides a "grammar" (in particular, verbs) for data manipulation and for operating on data frames**.
+
+With this grammar, you can sensibly communicate what it is that you are doing to a data frame that other people can understand (assuming they also know the grammar). This is useful because it **provides an abstraction for data manipulation that previously did not exist**.
+
+Another useful contribution is that the `dplyr` functions are **very** fast, as many key operations are coded in C++.
+
+### `dplyr` grammar
+
+Some of the key "verbs" provided by the `dplyr` package are
+
+-   `select()`: return a subset of the columns of a data frame, using a flexible notation
+
+-   `filter()`: extract a subset of rows from a data frame based on logical conditions
+
+-   `arrange()`: reorder rows of a data frame
+
+-   `rename()`: rename variables in a data frame
+
+-   `mutate()`: add new variables/columns or transform existing variables
+
+-   `summarise()` / `summarize()`: generate summary statistics of different variables in the data frame, possibly within strata
+
+-   `%>%`: the "pipe" operator is used to connect multiple verb actions together into a pipelineArtwork by
+
+### `select()`
+
+Lets convert the COVID-19 deaths linelist into a tibble first
+
+```{r}
+c19_df <- as_tibble(c19_df)
+str(c19_df)
+```
+
+The `select()` function can be used to **select columns of a data frame** that you want to focus on.
+
+::: callout-tip
+### Example
+
+Suppose we wanted to take the last 5 columns only. There are a few ways to do this.
+
+We could for example use numerical indices:
+
+```{r}
+names(c19_df)[10:15]
+```
+
+But we can also use the names directly:
+
+```{r}
+subset <- select(c19_df, state:comorb)
+head(subset)
+```
+:::
+
+::: callout-tip
+### Note
+
+The `:` normally cannot be used with names or strings, but inside the `select()` function you can use it to specify a range of variable names.
+:::
+
+You can also **omit** variables using the `select()` function by using the negative sign. With `select()` you can do
+
+```{r, eval=FALSE}
+select(c19_df, -(state:comorb))
+```
+
+The `select()` function also allows a special syntax that allows you to specify variable names based on patterns. So, for example, if you wanted to keep every variable that ends with a "2", we could do
+
+```{r}
+subset <- select(c19_df, ends_with(c("1", "2", "3")))
+str(subset)
+```
+
+Or if we wanted to keep every variable that starts with a "date", we could do
+
+```{r}
+subset <- select(c19_df, contains("date"))
+str(subset)
+```
+
+You can also use more general regular expressions if necessary. See the help page (`?select`) for more details.
+
+### `filter()`
+
+The `filter()` function is used to **extract subsets of rows** from a data frame. This function is similar to the existing `subset()` function in R but is quite a bit faster in my experience.
+
+![Artwork by Allison Horst on filter() function](https://github.com/allisonhorst/stats-illustrations/raw/main/rstats-artwork/dplyr_filter.jpg){width="80%"}
+
+\[**Source**: [Artwork by Allison Horst](https://github.com/allisonhorst/stats-illustrations)\]
+
+::: callout-tip
+### Example
+
+Suppose we wanted to extract the rows of the `c19_df` data frame of deaths in individuals older than 60, we could do
+
+```{r}
+c19_filter <- filter(c19_df, age > 59)
+str(c19_filter)
+```
+:::
+
+You can see that there are now only `r nrow(c19_filter)` rows in the data frame and the distribution of the `age` values is.
+
+```{r}
+summary(c19_filter$age)
+```
+
+We can place an arbitrarily complex logical sequence inside of `filter()`, so we could for example extract the rows where age is greater than 60 and nationality (`malaysian`) is equal to 1
+
+```{r}
+c19_filter <- filter(c19_df, age < 21 & malaysian==1)
+select(c19_filter, date, malaysian, age)
+```
+
+Now there are only `r nrow(c19_filter)` observations where both of those conditions are met.
+
+Other logical operators you should be aware of include:
+
+|  Operator |                  Meaning |                             Example |
+|----------:|-------------------------:|------------------------------------:|
+|      `==` |                   Equals |                     `malaysian== 1` |
+|      `!=` |           Does not equal |                     `malaysian!= 1` |
+|       `>` |             Greater than |                           `age> 60` |
+|      `>=` | Greater than or equal to |                          `age>= 60` |
+|       `<` |                Less than |                           `age< 60` |
+|      `<=` |    Less than or equal to |                          `age<= 60` |
+|    `%in%` |              Included in | `state %in% c("Selangor", "Johor")` |
+| `is.na()` |       Is a missing value |                `is.na(date_dose_2)` |
+
+::: callout-tip
+### Note
+
+If you are ever unsure of how to write a logical statement, but know how to write its opposite, you can use the `!` operator to negate the whole statement.
+
+A common use of this is to identify observations with non-missing data (e.g., `!(is.na(date_dose_2))`).
+:::
+
+### `arrange()`
+
+The `arrange()` function is used to **reorder rows** of a data frame according to one of the variables/columns. Reordering rows of a data frame (while preserving corresponding order of other columns) is normally a pain to do in R. The `arrange()` function simplifies the process quite a bit.
+
+Here we can order the rows of the data frame by date, so that the first row is the earliest (oldest) observation and the last row is the latest (most recent) observation.
+
+```{r}
+c19_df <- arrange(c19_df, date)
+```
+
+We can now check the first few rows
+
+```{r}
+head(select(c19_df, date, age), 3)
+```
+
+Columns can be arranged in descending order too by useing the special `desc()` operator.
+
+```{r}
+c19_df <- arrange(c19_df, desc(date))
+```
+
+Looking at the first three and last three rows shows the dates in descending order.
+
+```{r}
+head(select(c19_df, date, age), 3)
+tail(select(c19_df, date, age), 3)
+```
+
+### `rename()`
+
+**Renaming a variable** in a data frame in R is surprisingly hard to do! The `rename()` function is designed to make this process easier.
+
+Here you can see the names of the first six variables in the `c19_df` data frame.
+
+```{r}
+head(c19_df[, 1:6], 3)
+```
+
+These names are (arbitrarily again) unnecessarily long. Date doesn't need to be repeated for each column name are no other columns that could potentially be confused with the first six. So we can modify cause we're lazy to type long column names when analysing later on.
+
+```{r}
+c19_df <- rename(c19_df, death = date,
+                 announced = date_announced,
+                 positive = date_positive,
+                 dose1 = date_dose1,
+                 dose2 = date_dose2,
+                 dose3 = date_dose3)
+head(c19_df[, 1:5], 3)
+```
+
+The syntax inside the `rename()` function is to have the new name on the left-hand side of the `=` sign and the old name on the right-hand side.
+
+### `mutate()`
+
+The `mutate()` function exists to **compute transformations of variables** in a data frame. Often, you want to create new variables that are derived from existing variables and `mutate()` provides a clean interface for doing that.
+
+![Artwork by Allison Horst on mutate() function](https://github.com/allisonhorst/stats-illustrations/raw/main/rstats-artwork/dplyr_mutate.png){width="80%"}
+
+\[**Source**: [Artwork by Allison Horst](https://github.com/allisonhorst/stats-illustrations)\]
+
+For example, with demographic data, we often want to *categorise data*
+
+Here, we create a `age_cat` variable:
+
+```{r}
+c19_df <- mutate(c19_df, age_cat= ifelse(age<20, "<19", 
+                                         ifelse(age>59, ">60", "20-59")))
+```
+
+we can also `recode` category values within a variable, such as
+
+```{r}
+c19_df <- mutate(c19_df,  brand2 = recode(brand2, 
+                          "Pfizer" = 0, 
+                          "Sinovac" = 1, 
+                          "AstraZeneca" = 2, 
+                          "Moderna" = 2, 
+                          "Pending VMS sync" = 2, 
+                          "Sinopharm" = 2))
+```
+
+### `group_by()`
+
+The `group_by()` function is used to **generate summary statistics** from the data frame within strata defined by a variable.
+
+For example, in this dataset, you might want to know what the number of deaths in each state is?
+
+**In conjunction** with the `group_by()` function, we often use the `summarise()` function
+
+::: callout-tip
+### Note
+
+The **general operation** here is a combination of
+
+1.  Splitting a data frame into separate pieces defined by a variable or group of variables (`group_by()`)
+2.  Then, applying a summary function across those subsets (`summarise()`)
+:::
+
+::: callout-tip
+### Example
+
+We can create a separate data frame that splits the original data frame by state
+
+```{r}
+state <- group_by(c19_df, state)
+```
+
+We can then compute summary statistics for each year in the data frame with the `summarise()` function.
+
+```{r}
+summarise(state, age = mean(age, na.rm = TRUE),
+          age_median= median(age, na.rm = TRUE))
+```
+:::
+
+### `%>%`
+
+The pipeline operator `%>%` is very handy for **stringing together multiple `dplyr` functions in a sequence of operations**.
+
+Notice above that every time we wanted to apply more than one function, the sequence gets buried in a sequence of nested function calls that is difficult to read, i.e. This **nesting is not a natural way** to think about a sequence of operations.
+
+The `%>%` operator allows you to string operations in a left-to-right fashion, i.e
+
+::: callout-tip
+### Example
+
+Take the example that we just did in the last section.
+
+That can be done with the following sequence in a single R expression.
+
+```{r}
+c19_df %>% 
+  select(state, age) %>%
+  arrange(age) %>%
+  mutate(age_cat = ifelse(age<20, "<19", 
+                         ifelse(age>59, ">60", "20-59"))) %>%   
+  group_by(state, age_cat) %>% 
+  summarise(age = mean(age, na.rm = TRUE),
+          age_median= median(age, na.rm = TRUE))
+```
+:::
+
+This way we do not have to create a set of temporary variables along the way or create a massive nested sequence of function calls.
+
+### `slice_*()`
+
+The `slice_sample()` function of the `dplyr` package will allow you to see a **sample of random rows** in random order.
+
+The number of rows to show is specified by the `n` argument.
+
+-   This can be useful if you **do not want to print the entire tibble**, but you want to get a greater sense of the values.
+-   This is a **good option for data analysis reports**, where printing the entire tibble would not be appropriate if the tibble is quite large.
+
+::: callout-tip
+### Example
+
+```{r}
+slice_sample(c19_df, n = 10)
+```
+:::
+
+You can also use `slice_head()` or `slice_tail()` to take a look at the top rows or bottom rows of your tibble. Again the number of rows can be specified with the `n` argument.
+
+This will show the first 5 rows.
+
+```{r}
+slice_head(c19_df, n = 5)
+```
+
+This will show the last 5 rows.
+
+```{r}
+slice_tail(c19_df, n = 5)
+```
+
+## Pivoting in R
+
+The `tidyr` package includes functions to transfer a data frame between *long* and *wide*.
+
+-   **Wide format** data tends to have different attributes or variables describing an observation placed in separate columns.
+-   **Long format** data tends to have different attributes encoded as levels of a single variable, followed by another column that contains values of the observation at those different levels.
+
+Lets create a sample set based on the deaths dataset focussing only on `brand2` uptake over time.
+
+```{r, include=FALSE}
+c19_df <- read.csv("https://raw.githubusercontent.com/MoH-Malaysia/covid19-public/main/epidemic/linelist/linelist_deaths.csv")
+```
+
+```{r, echo=FALSE}
+dose2_df <- c19_df %>% select(date, brand2) %>%
+  mutate(across(where(is.character), na_if, ""),
+         brand2=ifelse(is.na(brand2), "unvaccinated", brand2)) %>%
+  group_by(date, brand2) %>%
+  summarise(count=n()) 
+```
+
+### `pivot_wider()`
+
+The `pivot_wider()` function is less commonly needed to tidy data as compared to its sister `pivot_longer`. It can, however, be useful for creating summary tables. As out sample dataset is already in long form- for the sake of this example we will `pivot_wider` first.
+
+```{r}
+dose2_df <- dose2_df %>%
+  pivot_wider(id_cols="date",
+              names_from = "brand2",
+              values_from = "count")
+```
+
+::: callout-tip
+### Tippy-tip
+
+You use the `kable()` function in `dplyr` to make nicer looking html tables
+
+```{r}
+dose2_df %>%
+  mutate_all(~replace_na(., 0)) %>%
+  head(10) %>%
+  knitr::kable(format="html", caption = "Vaccinations among COVID-19 fatalities by Brand") %>% kableExtra::kable_minimal()
+```
+:::
+
+### `pivot_longer()`
+
+Even if your data is in a tidy format, `pivot_longer()` is useful for pulling data together to take advantage of faceting, or plotting separate plots based on a grouping variable.
+
+```{r}
+dose2_df %>%
+  pivot_longer(-date, 
+               names_to = "brand2",
+               values_to = "count")
+```
+
+### `separate()` and `unite()`
+
+The same `tidyr` package also contains two useful functions:
+
+-   `unite()`: combine contents of two or more columns into a single column
+-   `separate()`: separate contents of a column into two or more columns
+
+First, we combine the first three columns into one new column using `unite()`.
+
+```{r}
+c19_df %>% select(brand1, brand2, brand3) %>%
+  unite(col="profile", 
+        brand1:brand3, 
+        sep="_") %>%
+  tail(10)
+```
+
+Next, we show how to separate the columns into three separate columns using `separate()` using the `col`, `into` and `sep` arguments.
+
+```{r}
+c19_df %>% select(brand1, brand2, brand3) %>%
+  unite(col="profile", 
+        brand1:brand3, 
+        sep="_") %>% 
+  select(profile) %>%
+  separate(col="profile", 
+           into=c("brand1", "brand2", "brand3"), 
+           sep="_") %>% 
+  tail(10)
+```
+
+## Mutating joins
+
+The `dplyr` package provides a set of **functions for joining two data frames** into a single data frame based on a set of key columns.
+
+There are several functions in the `*_join()` family.
+
+-   These functions all merge together two data frames
+-   They differ in how they handle observations that exist in one but not both data frames.
+
+Here, are the **four functions from this family** that you will likely use the most often:
+
+```{r, echo=FALSE}
+#| echo: false
+#| out-width: '60%'
+#| fig-align: 'center'
+library(knitr)
+join_funcs <- data.frame(func = c("`left_join()`",
+                                  "`right_join()`",
+                                  "`inner_join()`",
+                                  "`full_join()`"),
+                         does = c("Includes all observations in the left data frame, whether or not there is a match in the right data frame",
+                                  "Includes all observations in the right data frame, whether or not there is a match in the left data frame",
+                                  "Includes only observations that are in both data frames",
+                                  "Includes all observations from both data frames"))
+knitr::kable(join_funcs, col.names = c("Function", "What it includes in merged data frame"))
+```
+
+![](https://d33wubrfki0l68.cloudfront.net/aeab386461820b029b7e7606ccff1286f623bae1/ef0d4/diagrams/join-venn.png)
+
+\[[Source from R for Data Science](https://r4ds.had.co.nz/relational-data#relational-data)\]
+
+Suppose we want to create a table that combines the information about COVID-19 deaths (`c19_df`) with the information about the expenditure (`hies_df`) at each state.
+
+First lets take c19_df and aggregate it at the state level.
+
+```{r}
+state_df <- c19_df %>% select(state) %>%
+  group_by(state) %>%
+  summarise(deaths=n())
+```
+
+Lets call in an external object to join
+
+```{r}
+hies_df <- read.csv("https://raw.githubusercontent.com/dosm-malaysia/data-open/main/datasets/economy/hies_2019.csv")
+```
+
+Lets look at the data
+
+```{r}
+table(hies_df$area_type)
+```
+
+### Left Join
+
+We can use the `left_join()` function to merge the `state_df` and `hies_df` datasets.
+
+```{r leftjoin}
+left_join(x = state_df, y = hies_df, by = join_by(state==area))
+```
+
+::: callout-tip
+### Note
+
+The `by` argument indicates the column (or columns) that the two tables have in common. One more than one joining variable an be used for this statement
+:::
+
+Quite obviously the join should give you the total number of rows on the left side of your statement. Note in the above case there are 20 rows because there are four districts with the same name as states.
+
+### Inner Join
+
+The `inner_join()` function only **retains the rows of both tables** that have corresponding values. Here we can see the difference.
+
+```{r}
+inner_join(x = state_df, y = hies_df, by = join_by(state==area))
+```
+
+Does `inner_join` give different results to `left_join` in the above example?
+
+### Right Join
+
+The `right_join()` function is like the `left_join()` function except that it **gives priority to the "right" hand argument**.
+
+```{r}
+right_join(x = state_df, y = hies_df, by = join_by(state==area))
+```
+
+What about now?
+
+![](/images/normal.png)
+
+## Acknowledgements
+
+Material for this lecture was borrowed and adopted from
+
+-   <https://stephaniehicks.com/jhustatcomputing2022/>
+
+-   [The Epidemiologist R Handbook](https://epirhandbook.com/en/index.html)
+
+-   <https://rafalab.github.io/dsbook>
+
+-   <https://rmd4sci.njtierney.com>
+
+## Additional Resources
+
+::: callout-tip
+-   <https://r4ds.had.co.nz/tibbles.html>
+-   <https://jhudatascience.org/tidyversecourse/wrangle-data.html#data-wrangling>
+-   [dplyr cheat sheet from RStudio](http://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf)
+:::

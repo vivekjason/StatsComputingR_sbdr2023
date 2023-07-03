@@ -1,0 +1,63 @@
+---
+title: "Practical session 1: Untangling Data with Tidyverse: Data wranggling in R"
+format: html
+editor: visual
+---
+
+### COVID-19 Vaccinations and Death in Malaysia
+
+### Task 1: Calculate the average age for deaths by state and find the state with the highest average age.
+
+Steps:
+
+1.  First, we need to group the data by `state`.
+
+2.  Then, we can summarize the average age per state using `summarise`.
+
+3.  Use `arrange` to sort the average age in descending order to find the state with the highest average age.
+
+### Task 2: Determine the proportion of male to female deaths in each state.
+
+Steps:
+
+1.  Using `mutate`, create a new column called `gender` using `ifelse` to convert the `male` column to 'Male' and 'Female'.
+
+2.  Group the data by `state` and `gender`.
+
+3.  Summarise the count of each gender in each state.
+
+4.  Create a new column with the proportion of each gender in each state.
+
+### Task 3: Determine the total number of deaths by month and year.
+
+Steps:
+
+1.  Convert the `date` column to Date type if it's not already.
+
+2.  Use `mutate` to create new columns `year` and `month` using the `year` and `month` functions from the `lubridate` package.
+
+3.  Group the data by `year` and `month`.
+
+4.  Use `summarise` to count the number of deaths.
+
+### Task 4: Determine if comorbidities are more common in Malaysian or non-Malaysian deaths.
+
+Steps:
+
+1.  Create a new column `nationality` that categorizes `malaysian` into 'Malaysian' and 'Non-Malaysian' using `mutate` and `ifelse`.
+
+2.  Group by `nationality`.
+
+3.  Summarise the average comorbidity rate (`comorb`).
+
+### Task 5: Find out the most common vaccine brand combination that was administered.
+
+Steps:
+
+1.  Use `mutate` to create a new column `brands_combo` that concatenates `brand1`, `brand2`, and `brand3`.
+
+2.  `filter` to keep only those rows where `brands_combo` is not empty.
+
+3.  Group by `brands_combo`.
+
+4.  Count the number of occurrences for each vaccine brand combination using `summarise`.

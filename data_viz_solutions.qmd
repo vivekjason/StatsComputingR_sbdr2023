@@ -1,0 +1,174 @@
+---
+title: "Practical session 2: R-tistic Insights- Visualising your data in R"
+format: html
+editor: visual
+---
+
+### COVID-19 Vaccinations and Death in Malaysia
+
+```{r, results='hide'}
+#load packages
+required_packages <- c("tidyverse", "rio", "here", "stringr", "lubridate", "ggforce")
+not_installed <- required_packages[!(required_packages %in% installed.packages()[ , "Package"])]    
+if(length(not_installed)) install.packages(not_installed)                                           
+suppressWarnings(lapply(required_packages, require, character.only = TRUE))
+
+#call in data
+c19_df <- read.csv("https://raw.githubusercontent.com/MoH-Malaysia/covid19-public/main/epidemic/linelist/linelist_deaths.csv")
+```
+
+#### Task 1: Scatterplots
+
+1.  Call the data in
+
+2.  Create a new variable `vaccinated` that indicates if an individual is fully vaccinated (dose2) or not. (Tip: use `mutate` and `ifelse`)
+
+3.  Plot a scatterplot showing the relationship between `age` and `date`. Use the new variable `vaccinated` variable to color the points using the colour hex `#1369FF` and `#00B556`. (Tip: Use the command `scale_colour_manual`)
+
+4.  Next try using the `date_dose3` instead of date. Anything interesting?
+
+Solution:
+
+```{r, results='hide'}
+#clean data
+c19_df <- c19_df %>% 
+  mutate(across(where(is.character), na_if, ""),
+         vaccinated= ifelse(is.na(date_dose2), 0, 1))
+
+scatter_plot <- ggplot(data=c19_df) +
+  geom_point(mapping=aes(x=date, y=age, col=factor(vaccinated))) +
+  scale_colour_manual(name="Vaccination status",
+                      values = c(`0`="#1369FF", `1`="#00B556"),
+                      labels = c(`0`="Unvaccinated", `1`="Vaccinated"))
+scatter_plot
+```
+
+#### Task 2: Line Chart
+
+1.  Create a line chart to represent the cumulative number of vaccinations by dose over time.
+
+2.  Select all the `date_doseX`, and `state`
+
+3.  Pivot the data into long form (Tip: use the `pivot_long` function) and count the number of dose given on each date
+
+4.  Complete the series of dates using `complete`
+
+5.  Plot the the different doses by date across time and facet by `state`
+
+6.  Colour `date_dose3`= `#A3D2D5`. Maintain the other 2 colours.
+
+7.  Apply a pre-set theme
+
+Solution:
+
+```{r}
+vaccine_df <- c19_df %>% select(state, date_dose1, date_dose2, date_dose3) %>%
+  mutate(across(contains("date"), ~as.Date(., format = "%Y-%m-%d"))) %>%
+  pivot_longer(cols = starts_with("date_dose"), 
+               names_to = "dose", 
+               values_to = "date", 
+               values_drop_na = TRUE) %>%
+  group_by(state, dose, date) %>%
+  summarise(count = n(), .groups = "drop") %>%
+  group_by(state, dose) %>% 
+  complete(date = seq.Date(min(date, na.rm = TRUE), max(date, na.rm = TRUE), by = "day"), fill = list(count = 0))
+
+#plot
+line_plot <- ggplot(data=vaccine_df) +
+  geom_area(mapping=aes(x=date, y=count, fill=dose))+
+  scale_fill_manual(name="Vaccination status",
+                      values = c("date_dose1"="#1369FF", "date_dose2"="#00B556", "date_dose3"="#A3D2D5"),
+                      labels = c("date_dose1"="Dose 1", "date_dose2"="Dose 2", "date_dose3"="Dose 3")) +
+  facet_wrap(~state, ncol = 4, scales="free_y")+
+  theme_minimal()
+line_plot
+```
+
+#### Task 3: Boxplot
+
+1.  Call data in
+
+2.  Replace all empty cells with NA in column `brand2`
+
+3.  Group by `state` and `brand2` and summarise the number of groups in each `brand`, `state`
+
+4.  Plot a box plot on the distribution of deaths by brand2
+
+5.  Title should be "Number of Deaths by Vaccine Brand and Date" with x-axis labels of "Vaccine Brand" and y-axis labels of "Number of Deaths" (Tip: Use `labs`)
+
+Solution:
+
+```{r}
+c19_df <- read.csv("https://raw.githubusercontent.com/MoH-Malaysia/covid19-public/main/epidemic/linelist/linelist_deaths.csv")
+
+c19_df <- c19_df %>%
+  mutate(brand2 = replace_na(brand2, "Unvax")) %>%
+  filter(brand2 %in% c("AstraZeneca", "Pfizer", "Sinovac", "Unvax")) %>%
+  group_by(state, brand2) %>%
+  summarise(deaths = n(), .groups = "drop")
+
+boxplot_plot <- ggplot(c19_df) +
+  geom_boxplot(aes(x = brand2, y = deaths, col=brand2)) +
+  labs(x = "Vaccine Brand", y = "Number of Deaths", 
+       title = "Number of Deaths by Vaccine Brand and Date") +
+  theme_minimal()
+boxplot_plot
+
+```
+
+#### Task 4: Bar chart
+
+1.  Call in data
+
+2.  Select on `state`, `malaysian`, `bid`
+
+3.  Factorise the variable
+
+4.  Build a grouped bar chart by `state` and `bid` status
+
+5.  Facet wrap by `malaysian`
+
+6.  Title should be "Deaths by State, Brought-in-Dead Status, and Malaysian Status" with x-axis labels of "State" and y-axis labels of "Number of Deaths". Legend label should be "Brought-in-Dead Status".
+
+7.  Apply theme_minimal and adjust the x-axis text to be perpendicular (90 degrees) to the axis (Tip: Use `theme (axis.text.x=element_text())`)
+
+8.  What should you change to transform this into a stacked bar chart?
+
+Solution:
+
+```{r}
+c19_df <- read.csv("https://raw.githubusercontent.com/MoH-Malaysia/covid19-public/main/epidemic/linelist/linelist_deaths.csv")
+
+c19_df  <- c19_df %>%
+  mutate(malaysian = if_else(malaysian == 1, "Malaysian", "Non-Malaysian"),
+         bid = if_else(bid == 1, "Brought-in-Dead", "Hospital Death")) %>%
+  mutate(across(c(malaysian, bid), factor))  # Convert these columns to factors
+
+# Create the grouped bar chart
+bar_plot <- ggplot(c19_df, aes(x = state, fill = bid)) +
+  geom_bar(position = "dodge") +
+  facet_wrap(~malaysian) +
+  labs(x = "State", y = "Number of Deaths", 
+       title = "Deaths by State, Brought-in-Dead Status, and Malaysian Status",
+       fill = "Brought-in-Dead Status") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  # Rotate x-axis labels for better visibility
+bar_plot
+
+#question 8 remove position=dodge 
+```
+
+#### Task 5: Save plots
+
+1.  Easy peasy lemon squesy- just save all of the above 4 plots. (Tip: use `ggsave()`)
+
+2.  How can we change output format, quality, size
+
+Solution:
+
+```{r, eval=FALSE}
+ggsave("scatter_plot.png", scatter_plot)
+ggsave("line_plot.pdf", line_plot, dpi=300)
+ggsave("boxplot_plot.svg", boxplot_plot, unit="px", height=1080, width = 1920)
+ggsave("bar_plot.eps", bar_plot, unit="in", height=3.25, width = 3.25)
+```

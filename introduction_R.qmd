@@ -1,0 +1,798 @@
+---
+title: "Introduction to R"
+author: "Vivek Jason"
+format: 
+  html:
+    theme: minty
+    toc: true
+    toc_float: true
+editor: visual
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(readr)
+library(tidyverse)
+library(rvest)
+library(magrittr)
+library(zoo)
+```
+
+![](/images/banner.png){fig-align="center"}
+
+Welcome to Statistical Computing in R! (Beginner-Intermediate) organised by the Sector for Biostatistics and Data Respository, National Instititues of Health.
+
+### Assumptions and pre-requisites
+
+The 2-day workshop as you can imagine is very short. While, we do not assume a significant background in statistics we assume you:
+
+1.  You know the **basics** of computing environments
+
+-   You have access to a computing environment (i.e. locally on a laptop or working in the cloud)
+
+-   You generally feel comfortable with installing and working with software
+
+2.  You know the **basics** of statistics
+
+-   The central dogma (estimates, standard errors, basic distributions, etc.)
+
+-   Key statistical terms and methods
+
+-   Differences between estimation vs testing vs prediction
+
+-   Know how to fit and interpret **basic** statistical models (e.g. linear models)
+
+3.  Know some basics of at least one programming language
+
+While we will be covering very briefly some basic of R and setuping up your environment, we will not be able to spend significant time covering these concepts and technologies. Data analyses you will perform will also often involve significant data extraction, cleaning, and transformation. We will learn about tools to do all of this, but hopefully most of this sounds familiar to you so you can focus on the concepts we will be teaching around best practices for statistical computing.
+
+::: callout-tip
+Some resources that may be useful if you feel you may be missing pieces of this background:
+
+-   **Statistics** - [Mathematical Biostatistics Bootcamp I (Coursera)](https://www.coursera.org/learn/biostatistics); [Mathematical Biostatistics Bootcamp II (Coursera)](https://www.coursera.org/learn/biostatistics-2)
+-   **Basic Data Science** - [R for Data Science)](https://r4ds.had.co.nz/); [Data Science Specialization (Coursera)](https://www.coursera.org/specializations/jhu-data-science)
+-   **Rmarkdown** - [Rmarkdown introduction](https://rmarkdown.rstudio.com/lesson-1.html)
+:::
+
+### Getting set up
+
+You must install [R](https://cran.r-project.org) and [RStudio](https://rstudio.com) on your computing environment in order to complete this workshop. We assume you have already setup your environment (you have been emailed instructions last week).
+
+However if you have not, here is a quick recap:
+
+These are two **different** applications that must be installed separately before they can be used together:
+
+-   R is the core underlying programming language and computing engine that we will be learning in this course
+
+-   RStudio is an interface into R that makes many aspects of using and programming R simpler
+
+Both R and RStudio are available for Windows, macOS, and most flavors of Unix and Linux. Please download the version that is suitable for your computing setup.
+
+#### How to Download R for Windows
+
+Go to [https://cran.r-project.org]() and
+
+1.  Click the link to "Download R for Windows"
+
+2.  Click on "base"
+
+3.  Click on "Download R 4.2.1 for Windows"
+
+::: callout-warning
+The version in the video is not the latest version of R. Please download the latest version.
+:::
+
+![Video Demo for Downloading R for Windows](/videos/downloadRWindows.gif)
+
+#### How to Download R for the Mac
+
+Goto [https://cran.r-project.org]() and
+
+1.  Click the link to "Download R for (Mac) OS X".
+
+2.  Click on "R-4.2.1.pkg"
+
+::: callout-warning
+The version in the video is not the latest version of R. Please download the latest version.
+:::
+
+![Video Demo for Downloading R for the Mac](/videos/downloadRMac.gif)
+
+#### How to Download RStudio
+
+Goto [https://rstudio.com]() and
+
+1.  Click on "Products" in the top menu
+
+2.  Then click on "RStudio" in the drop down menu
+
+3.  Click on "RStudio Desktop"
+
+4.  Click the button that says "DOWNLOAD RSTUDIO DESKTOP"
+
+5.  Click the button under "RStudio Desktop" Free
+
+6.  Under the section "All Installers" choose the file that is appropriate for your operating system.
+
+::: callout-warning
+NOTE: The video shows how to download RStudio for the Mac but you should download RStudio for whatever computing setup you have
+:::
+
+![Video Demo for Downloading RStudio](/videos/downloadRStudio.gif){width="80%"}
+
+#### Download the Tidyverse package
+
+Throughout the course, we will make use of numerous R add-on packages that must be installed over the Internet. Packages can be installed using the `install.packages()` function in R. For example, to install the `tidyverse` package, you can run
+
+```{r}
+#| eval: false
+install.packages("tidyverse")
+```
+
+### Learning Objectives
+
+The goal is by the end of the workshop, students will be able to:
+
+1.  Install and configure software necessary for a statistical programming environment
+
+2.  Write and debug code in base R and the tidyverse
+
+3.  Build basic data visualizations using R and the tidyverse
+
+4.  Run statistical tests in the R programme
+
+### Workshop logistics
+
+#### Speaker & Facilitators
+
+## Speakers
+
+![](/images/1688354405314.png){fig-align="left" width="2in"}
+
+**Vivek Jason**
+
+Jason is a gazetting Public Health Physician passionate about epidemiology, infectious diseases and data science. He spends his time between coding, playing with his toddler and pondering the fate of the universe.
+
+![](/images/1688352291610.png){fig-align="left" width="2in"}
+
+**Ang Swee Hung**
+
+Swee Hung is a training Public Health Physician that works heavily in the fields of non-communicable disease epidemiology. Renowned for her calmness under pressure- Swee Hung also enjoys the serenity of long drives.
+
+![](/images/1688352450596.png){fig-align="left" width="2in"}
+
+**Evi Diana**
+
+Evi is a statistician with vast expertise in complex sample analysis and clustering. The only person whose math you should trust in this workshop- Evi always has a smile on her face.
+
+#### Schedule
+
+| Date                | Time                 | Topic                      |
+|:--------------------|:---------------------|:---------------------------|
+| 10.7.2022 (Monday)  | 08.30 am - 09.00 am  | Registration               |
+|                     | 9.00 am - 10.00 am   | Introduction to R Software |
+|                     | 10.00 am - 12.30 pm  | Data wrangling             |
+|                     | 12.30 pm - 02.00 pm  | Break                      |
+|                     | 02.00 pm - 04.30 pm  | Data Visualization         |
+| 11.7.2022 (Tuesday) | 08.00 am -- 08.30 am | Registration               |
+|                     | 08.30 am - 11.30 am  | Hypothesis testing         |
+|                     | 1.00 pm - 02.15 pm   | Break                      |
+|                     | 02.15 pm - 04.30 pm  | Introduction to Regression |
+|                     | 04.30 pm - 05.00 pm  | Q&A                        |
+
+### What will we learn in the next hour?
+
+-   Some backround on R
+
+-   Understanding R and RStudio
+
+-   Grammar of R
+
+-   Taking the next step
+
+### What is...
+
+```{r, echo=FALSE}
+# Define variable containing url
+url <- "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Eo_circle_light-blue_white_letter-r.svg/1200px-Eo_circle_light-blue_white_letter-r.svg.png"
+```
+
+<center><img src="`r url`" style="height: 200px"/></center>
+
+-   a software package for statistical computing and graphics
+
+-   a collection of 18,636packages (as of September 2020)!
+
+-   a (not ideal) programming language
+
+-   a work environment, widely used, POWERFUL!
+
+### Why use R
+
+-   It's free!
+
+-   It runs on a variety of platforms including Windows, Unix and MacOS.
+
+-   It provides an unparalleled platform for programming new statistical methods in an easy and straightforward manner.
+
+-   It contains advanced statistical routines not yet available in other packages.
+
+-   It has state-of-the-art graphics capabilities
+
+-   The next step for open-science initiatives chief being reproducibility
+
+::: callout-note
+#### A note on reproducibility
+
+-   Replication, whereby scientific questions are examined and verified independently by different scientists, is the gold standard for scientific validity.
+
+-   Replication can be difficult and often there are no resources to independently replicate a study.
+
+-   Reproducibility, whereby data and code are re-analyzed by independent scientists to obtain the same results of the original investigator, is a reasonable minimum standard when replication is not possible.
+:::
+
+### Reproducibility and Literate Programming
+
+One basic idea to make writing reproducible reports easier is what's known as *literate statistical programming* (or sometimes called [literate statistical practice](http://www.r-project.org/conferences/DSC-2001/Proceedings/Rossini.pdf)). This comes from the idea of [literate programming](https://en.wikipedia.org/wiki/Literate_programming) in the area of writing computer programs.
+
+The idea is to **think of a report or a publication as a stream of text and code**.
+
+-   The text is readable by people and the code is readable by computers.
+
+-   The analysis is described in a series of text and code chunks.
+
+-   Each kind of code chunk will do something like load some data or compute some results.
+
+-   Each text chunk will relay something in a human readable language.
+
+There might also be **presentation code** that formats tables and figures and there's article text that explains what's going on around all this code. This stream of text and code is a literate statistical program or a literate statistical analysis.
+
+### CRAN:Comprehensive R Archive Network
+
+At a higher level one "limitation" of R is that its functionality is based on consumer demand and (voluntary) user contributions. If no one feels like implementing your favorite method, then it's your job to implement it (or you need to pay someone to do it). The capabilities of the R system generally reflect the interests of the R user community. As the community has ballooned in size over the past 10 years, the capabilities have similarly increased. This can be seen in the exponential increase in packages on CRAN
+
+```{r, include=FALSE, warning=FALSE}
+cran <- read_html("https://cran.r-project.org/web/packages/available_packages_by_date.html") %>% 
+  html_table() %>%
+  extract2(1) %>% as.data.frame() %>%
+  mutate(Date=as.Date(Date)) %>%
+  group_by(Date) %>%
+  count(Date) %>% ungroup() %>%
+  mutate(package=cumsum(n)) %>%
+  rename(date=Date)
+```
+
+```{r, warning=FALSE}
+ggplot(cran, aes(x=date)) +
+  geom_line(aes(y=package), col="navy",size=1.1) +
+  geom_point(aes(y=package), col="goldenrod2", size=0.05) +
+  scale_y_continuous(name = "Number (n)") +
+  theme_minimal() +
+  theme(legend.position = c(.7, .07),
+        legend.justification = c("right", "bottom"),
+        legend.box.just = "right",
+        legend.box.background=element_rect(color = NA, fill = NA),
+        legend.background=element_rect(color = NA, fill = NA),
+        legend.key = element_rect(color=NA, fill = NA),
+        legend.margin = margin(6, 6, 6, 6),
+        legend.title = element_text(size = 24),
+        legend.text = element_text(size = 20,face="plain"),
+        panel.grid.major.x=element_blank(),
+        panel.grid.minor.x = element_blank(),
+        plot.title = element_text(size=12),
+        axis.ticks.x = element_line(color = "grey40", 
+                                    size = 1, linetype = "solid"),
+        axis.title.x = element_text(size=24),
+        axis.text.x      = element_text(size=20),
+        axis.ticks.y.left = element_line(color = "grey50", 
+                                    size = 1, linetype = "solid"),
+        axis.title.y.left    = element_text(size=24, color="grey50"),
+        axis.text.y.left      = element_text(size=20, color="grey50"),
+        axis.line.y.left = element_line(color = "grey50"),
+        axis.ticks.y.right = element_line(color = "firebrick2", 
+                                    size = 1, linetype = "solid")) +
+  scale_x_date(date_breaks = "3 year", date_minor_breaks = "1 day",
+               date_labels = "%b %y",
+               expand=c(0,0)) +
+  labs(x = "Date")
+```
+
+### History time
+
+-   S was developed at Bell Labs, starting in the 1970s
+
+-   R was created in the 1990s by Ross Ihaka and Robert Gentleman
+
+-   R was based on S, with code written in C
+
+-   S largely was used to make good graphs -- not an easy thing in 1975. R, like S, is quite good for graphing
+
+    ![](/images/posit.png)
+
+### Design of the R System
+
+The primary R system is available from the [Comprehensive R Archive Network](http://cran.r-project.org), also known as CRAN. CRAN also hosts many add-on packages that can be used to extend the functionality of R.
+
+The R system is divided into 2 conceptual parts:
+
+1.  The "base" R system that you download from CRAN:
+
+-   [Linux](http://cran.r-project.org/bin/linux/)
+
+-   [Windows](http://cran.r-project.org/bin/windows/)
+
+-   [Mac](http://cran.r-project.org/bin/macosx/)
+
+2.  Everything else.
+
+R functionality is divided into a number of *packages*.
+
+-   The "base" R system contains, among other things, the `base` package which is required to run R and contains the most fundamental functions.
+
+-   The other packages contained in the "base" system include `utils`, `stats`, `datasets`, `graphics`, `grDevices`, `grid`, `methods`, `tools`, `parallel`, `compiler`, `splines`, `tcltk`, `stats4`.
+
+-   There are also "Recommended" packages: `boot`, `class`, `cluster`, `codetools`, `foreign`, `KernSmooth`, `lattice`, `mgcv`, `nlme`, `rpart`, `survival`, `MASS`, `spatial`, `nnet`, `Matrix`.
+
+When you download a fresh installation of R from CRAN, you get all of the above, which represents a substantial amount of functionality. However, there are many other packages available:
+
+-   There are over 10,000 packages on CRAN that have been developed by users and programmers around the world.
+
+-   There are also many packages associated with the [Bioconductor project](http://bioconductor.org).
+
+-   People often make packages available on their personal websites; there is no reliable way to keep track of how many packages are available in this fashion.
+
+### At its core R is a programming language
+
+-   Concepts such as loops and functions speed up and simplify analytic processes
+
+-   If you want R to be (relatively) fast, take advantage of vector operations; e.g., use the replicate command (rather than a loop) or the apply function.
+
+-   optimising computation is critical to newer processes i.e. big data
+
+### R is object oriented
+
+-   e.g., MyModel \<- lm(wt \~ ht, data = mydata)
+
+-   then hist(MyModel\$residuals)
+
+-   Note that lm(wt \~ ht\*age + log(bp), data = mydata) regresses wt on ht, age, the ht-by-age interaction, and log(bp)
+
+-   There is no need to create the interaction or the log(bp) variable outside of the lm() command
+
+-   another e.g.
+
+-   mod1 \<- lm(wt \~ ht\*age + log(bp), data = mydata)
+
+-   mod2 \<- lm(wt \~ ht + log(bp), data = mydata)
+
+-   anova(mod2, mod1) gives a nested/ interaction F-test
+
+### Limitations
+
+-   fresh non-coders may find it difficult at first , the curve is steep especially if you have no background
+
+-   hundreds of packages mean learning 100s of different things and styles - analysis is much more transient
+
+-   SPSS, STATA use a much more ordered approach - fresh non-coders may find it difficult at first
+
+-   generally a intepreted language (vs compiled), this makes certain operations clunky and slow like looping
+
+    ![](/images/steep_curve.jpg)
+
+Nonetheless The R paradigm is different- its uses a more iterative approach and as such analysis is more flexible, makes a more in depth inquiry of data Mastery is key to tapping the potential of data science in real-world and research settings The first key to mastery of R is....
+
+**UNINSTALL SPSS** AS.. QUICKLY.. AS.. YOU.. CAN!!
+
+![](/images/uninstall.png){fig-align="center"}
+
+### Rstudio
+
+-   An Integrated Development Environment (IDE) for R
+-   A gift, from J.J. Allaire (Macalester College, '91) to the world
+-   An easy (easier) way to use R
+-   Available as a desktop product or, run off a server or cloud
+-   Recently renamed as Posit- to include Python, VS and Quatro
+-   Free to a degree!
+
+```{r, echo=FALSE}
+# Define variable containing url
+url <- "https://d33wubrfki0l68.cloudfront.net/f567102197110696f30ee8983050ecdb994adf8c/59526/blog/rstudio-is-becoming-posit/thumbnail_hub4076432a9bd62034697fb6bf5e4d30a_143092_2220x0_resize_q75_box.jpg"
+```
+
+<center><img src="`r url`" style="height: 100px"/></center>
+
+### RStudio environment
+
+![](/images/rstudio.png){fig-align="center"}
+
+### Setting a working directory
+
+Check you working directory by
+
+```{r, eval=FALSE}
+getwd()
+```
+
+You can then set your working directory like this
+
+```{r, eval=FALSE}
+setwd("C:\Users\VivekJason\RTraining\introduction")
+```
+
+::: callout-warning
+## Setting a work directory like this is called an absolute path and in statistical computing is a frowned upon practice as it locks directories to you system only. Instead we should utilise relative paths.
+:::
+
+A relative path should look like this
+
+```{r, eval=FALSE}
+setwd("../data")
+```
+
+There are even better practices for sustainability and reproducibility such but we wont cover those practices here. You can find more information in this [post](https://www.tidyverse.org/articles/2017/12/workflow-vs-script/)
+
+### Reading data into R
+
+This section demonstrates the fundamental functions required to read and write data in R.
+
+In base R, there are key functions for reading data:
+
+-   read.table() & read.csv(): used for reading tabular data
+
+-   readLines(): used for reading lines from a text file
+
+Corresponding functions exist for writing data:
+
+-   write.table(): used to write tabular data to text files or connections, such as CSV
+
+-   writeLines(): used to write character data line-by-line to a file or connection
+
+Let's attempt to read data into R using the read.csv() function.
+
+```{r, eval=FALSE, echo=TRUE}
+df <- read.csv("data/yourfilename.csv")#this is just an example
+```
+
+You can even pull a csv straight from the web
+
+```{r, warning=FALSE, echo=TRUE}
+df <- read.csv("https://raw.githubusercontent.com/MoH-Malaysia/data-darah-public/main/newdonors_state.csv")
+```
+
+You can export he above csv to you computer by
+
+```{r, eval=FALSE}
+write.csv(df, "blood_donor_malaysia.csv")
+```
+
+To extract a specific column, we can use the \$ symbol:
+
+```{r, echo=TRUE}
+df$hospital
+```
+
+Almost all imaginable formats can be imported/ exported into R. For a more in depth explanation you can have a look at this [book chapter.](https://datasciencebook.ca/reading.html)
+
+### Base R Grammar
+
+-   Results of calculations can be stored in objects using the assignment operators: An arrow (\<-) formed by a smaller than character and a hyphen without a space! The equal character (=).
+
+-   Object names cannot contain \`strange' symbols like !, +, -, #.
+
+-   A dot (.) and an underscore ( ) are allowed, also a name starting with a dot.
+
+-   Object names can contain a number but cannot start with a number.
+
+-   R is case sensitive, X and x are two different objects, as well as temp and temP.
+
+#### Lets do some coding
+
+Simple calculations
+
+```{r, echo=TRUE}
+5
+```
+
+```{r, echo=TRUE}
+2+5
+```
+
+```{r, echo=TRUE}
+log(5)
+```
+
+#### Storing objects
+
+Store a number
+
+```{r, echo=TRUE}
+x <- 2
+x
+```
+
+Try it with =
+
+```{r, echo=TRUE}
+x=2
+x
+```
+
+Same results
+
+Store an object
+
+```{r, echo=TRUE}
+x <- "Hello"
+x
+```
+
+Store a string of numbers
+
+```{r, echo=TRUE}
+x <- c(1:10)
+x
+```
+
+Check the string and subset some values based on criteria
+
+```{r, echo=TRUE}
+x>8
+```
+
+```{r, echo=TRUE}
+x < 5
+```
+
+```{r, echo=TRUE}
+x[(x>8) | (x<5)]
+```
+
+#### Vectors
+
+Write a vector of weights
+
+```{r, echo=TRUE}
+weight <- c(55, 67, 99, 87, 62, 45, 32, 6, 22, 88)
+```
+
+Subset the third value
+
+```{r, echo=TRUE}
+weight[3]
+```
+
+Subset the 4th to 6th value
+
+```{r, echo=TRUE}
+weight[4:6]
+```
+
+Define another vector of weights
+
+```{r, echo=TRUE}
+height <- c(123, 165, 187, 201, 152, 157, 134, 23, 91, 197)
+```
+
+Estimate a BMI
+
+```{r, echo=TRUE}
+bmi <- weight/((height/100)^2)
+bmi
+```
+
+#### Descriptive of the vector
+
+```{r, echo=TRUE}
+length(height)
+```
+
+```{r, echo=TRUE}
+mean (weight)
+```
+
+```{r, echo=TRUE}
+var(height)
+```
+
+#### Matrices
+
+Define a new vector
+
+```{r, echo=TRUE}
+obs <- 1:10
+```
+
+Join them into a matrix
+
+```{r, echo=TRUE}
+m <- cbind(obs, height, weight, bmi)
+```
+
+Describe the matrix
+
+```{r, echo=TRUE}
+typeof(m)
+```
+
+```{r, echo=TRUE}
+class(m)
+```
+
+```{r, echo=TRUE}
+is.matrix(m)
+```
+
+```{r, echo=TRUE}
+dim(m)
+```
+
+#### Quick and dirty plots in base R
+
+```{r, echo=TRUE}
+xplot <- plot(height, weight, ylab="Weight", xlab="Height")
+```
+
+```{r, echo=TRUE}
+xplot
+```
+
+#### Dataframes
+
+Convert the earlier matrix into a df
+
+```{r, echo=TRUE}
+df <- as.data.frame(m)
+```
+
+Check the column names
+
+```{r, echo=TRUE}
+names(df)
+```
+
+Summarise the columns
+
+```{r, echo=TRUE}
+summary(df)
+```
+
+#### Some other importannt grammar
+
+-   ls() lists all the function objects in the environment
+
+```{r, echo=TRUE, eval=FALSE}
+ls()
+```
+
+-   rm() removes a particular function, rm(list=ls()) empties the environment
+
+```{r, echo=TRUE}
+rm(x)
+```
+
+### Special characters
+
+-   NA: Not Available (i.e. missing values)
+
+-   NaN: Not a Number (e.g. 0/0)
+
+-   Inf: Infinity
+
+-   -Inf: Minus Infinity.
+
+For instance 0 divided by 0 gives a NaN, but 1 divided by 0 gives Inf.
+
+#### There are many ways to skin a cat in R
+
+![](images/cat.jpg){fig-align="center"}
+
+For instance
+
+```{r, echo=TRUE}
+mean(df$height) 
+```
+
+Or
+
+```{r, echo=TRUE}
+with(df, mean(height))
+```
+
+Or
+
+```{r, echo=TRUE}
+mean(height, data=df)
+```
+
+Or for a plot you could
+
+```{r, echo=TRUE}
+plot(df$height,df$weight)
+```
+
+or
+
+```{r, echo=TRUE}
+with(df, plot(height,weight)) 
+```
+
+or
+
+```{r, echo=TRUE}
+plot(weight~height, data=df)
+```
+
+Of course not every thing will work
+
+```{r, echo=TRUE}
+plot(height, weight, data=df)
+```
+
+### A word on the tidyverse
+
+-   The tidyr and dplyr packages handle SQL-ytpe work: merging files, extracting subsets, etc.
+
+```{r, echo=TRUE, eval=FALSE}
+#install tidyerse
+install.packages("tidyverse")
+
+#load dtidyverse
+library(tidyverse)
+
+#wranggle data
+sub_df <- df %>% filter(bmi>20) %>% 
+  mutate(BMI=bmi*bmi)#takes a sample of size 5000, extracts only the rows for which age > 18, and saves the result in newNCHS
+
+```
+
+The tidyverse framework is **AMAZING** and we will focus on utilising this framework for the remainder of this workshop.
+
+::: callout-tip
+-   Nobody remembers everything
+
+-   First thing to check is CRAN- look for documentation of package
+
+-   type ? in console
+
+-   Stackoverflow, Rstudio forum etc
+
+-   REMEMBER R IS ALL ABOUT COMMUNITY
+:::
+
+### Acknowledgements
+
+Material for this lecture was borrowed and adopted from
+
+-   <https://stephaniehicks.com/jhustatcomputing2022/>
+
+-   <https://rafalab.github.io/dsbook>
+
+-   <https://rmd4sci.njtierney.com>
+
+### Additional Resources
+
+::: callout-tip
+1)  Programming in R
+
+-   [An Introduction to R Complete introduction to base R](https://cran.r-project.org/doc/manuals/r-release/R-intro.pdf)
+
+-   [R for Data Science Introduction to data analysis using R](http://r4ds.had.co.nz/)
+
+-   [Advanced R In-depth discussion of programming in R](https://adv-r.hadley.nz/)
+
+2)  Data viz in R
+
+-   [Data Visualization](http://socviz.co/)
+
+-   [Elegant Graphics for Data Analysis](http://moderngraphics11.pbworks.com/f/ggplot2-Book09hWickham.pdf)
+
+3)  Extensions to R
+
+-   [Programming interactive R-apps using Shiny](https://shiny.rstudio.com/articles/)
+
+-   [R markdown Integrate code and output into typeset documents and slide](https://rmarkdown.rstudio.com/lesson-1.html)
+
+-   [RStudio Cheat Sheets Cheatsheets for numerous packages](https://www.rstudio.com/resources/cheatsheets/).
+:::
+
+## 

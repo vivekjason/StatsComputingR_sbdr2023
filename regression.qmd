@@ -1,0 +1,380 @@
+---
+title: "Progression to Regression: An Introduction to Regression in R"
+format: 
+  html:
+    theme: minty
+    toc: true
+    toc_float: true
+editor: visual
+---
+
+![](/images/banner.png)
+
+Regression analysis is a powerful statistical tool that allows researchers to investigate relationships between variables, specifically the relationship between a dependent variable and one or more independent variables. In healthcare data, regression analysis is used for numerous purposes:
+
+1.  **Prediction and Forecasting:** Regression analysis can help forecast future health trends based on historical data. For example, it can predict the prevalence of a disease based on risk factors.
+
+2.  **Identifying Risk Factors:** Regression analysis can be used to identify risk factors for diseases. For example, it can help determine whether smoking is a significant risk factor for lung cancer.
+
+3.  **Cost-effectiveness Analysis:** In health economics, regression analysis can help analyze the cost-effectiveness of different treatments or interventions.
+
+4.  **Evaluating Treatment Effects:** Regression can be used to compare the effects of different treatments in a population, which can inform healthcare decision-making.
+
+Here are some important regression models used in healthcare data analysis:
+
+1.  **Linear Regression:** Linear regression is used when the dependent variable is continuous. For example, it could be used to examine the relationship between age (independent variable) and blood pressure (dependent variable).
+
+2.  **Logistic Regression:** Logistic regression is used when the dependent variable is binary, i.e., it has two possible outcomes. It is often used to identify risk factors for diseases. For example, it could be used to investigate the impact of various factors (like age, sex, BMI, smoking status) on the likelihood of developing heart disease (Yes/No).
+
+3.  **Cox Regression:** Cox regression, or proportional hazards regression, is a type of survival analysis used to investigate the effect of various factors on the time a specified event takes to happen. For example, it can be used to study the survival time of patients after being diagnosed with a certain disease.
+
+4.  **Poisson Regression:** Poisson regression is used for count data. For instance, it can model the number of hospital admissions over a certain period.
+
+5.  **Multilevel Regression:** Multilevel (or hierarchical) regression is used when data is grouped, such as patients within hospitals. This takes into account the potential correlation of patients within the same group.
+
+6.  **Nonlinear Regression:** Nonlinear regression can be used when the relationship between the independent and dependent variables is not linear.
+
+Remember, selecting the appropriate regression model depends largely on the type of data at hand and the specific research question. We will be introducing the approach to univariable and multivariable linear and logistic regression analysis in R.
+
+Before we start lets get some important packages loaded
+
+```{r, results=FALSE, warning=FALSE}
+required_packages <- c("tidyverse", "lubridate", "gtsummary", "broom", "performance", "see", "flextable", "stats", "car")
+not_installed <- required_packages[!(required_packages %in% installed.packages()[ , "Package"])]    
+if(length(not_installed)) install.packages(not_installed)                                           
+suppressWarnings(lapply(required_packages, require, character.only = TRUE))
+
+```
+
+Lets call in the data:
+
+```{r}
+c19_df <- read.csv("https://raw.githubusercontent.com/MoH-Malaysia/covid19-public/main/epidemic/linelist/linelist_deaths.csv")
+
+#create a sequence of numbers to represent time
+c19_df <- c19_df %>%
+  arrange(date) %>%
+  group_by(date) %>%
+  mutate(date_index = cur_group_id(),
+         age_cat=ifelse(age<20, "Less than 20",
+                        ifelse(age %in% 20:40, "20-40",
+                               ifelse(age %in% 40:60, "40-60",
+                                      ifelse(age %in% 60:80, "60:80", ">80"))))) %>%
+  ungroup()
+```
+
+Just to be consistent we what I said yesterday- before diving into the data always always skim the data first to get a quick feels
+
+```{r}
+c19_df %>% 
+  skimr::skim()
+```
+
+### **Linear regression**
+
+The R function [`lm()`](https://rdrr.io/r/stats/lm.html) perform linear regression, assessing the relationship between numeric response and explanatory variables that are assumed to have a linear relationship.
+
+Provide the equation as a formula, with the response and explanatory column names separated by a tilde `~`. Also, specify the dataset to `data =`. Define the model results as an R object, to use later.
+
+#### Univariate linear regression
+
+```{r}
+lm_results <- lm(age ~ malaysian, data = c19_df)
+```
+
+You can then run [`summary()`](https://rdrr.io/r/base/summary.html) on the model results to see the coefficients (Estimates), P-value, residuals, and other measures.
+
+```{r}
+summary(lm_results)
+```
+
+Alternatively you can use the `tidy()` function from the **broom** package to pull the results in to a table. What the results tell us is that Malaysians (change from 0 to 1) the age of COVID-19 death increases by 14.8 years and this is statistically significant (p\<0.01).
+
+```{r}
+tidy(lm_results)
+```
+
+You can then also use this regression to add it to a **ggplot**, to do this we first pull the points for the observed data and the fitted line in to one data frame using the `augment()` function from **broom**.
+
+```{r}
+## pull the regression points and observed data in to one dataset
+points <- augment(lm_results)
+
+## plot the data using age as the x-axis 
+ggplot(points, aes(x = malaysian)) + 
+  ## add points for height 
+  geom_point(aes(y = age)) + 
+  ## add your regression line 
+  geom_line(aes(y = .fitted), colour = "red")
+```
+
+::: callout-note
+When using a categorical variable as the predictor as we did above the plots can appear somewhat difficult to understand. We can try using a continuous on continuous method and implement it more simpler directly in ggplot and it should look like:
+
+```{r}
+## add your data to a plot 
+ ggplot(c19_df, aes(x = date_index, y = age)) + 
+  ## show points
+  geom_point() + 
+  ## add a linear regression 
+  geom_smooth(method = "lm", se = FALSE)
+```
+:::
+
+#### Multivariable linear regression
+
+There is almost no difference when carrying out multivariable linear regression, instead we just add on the expression `+` to add more variables to the equation.
+
+```{r}
+lm_results <- lm(age ~ malaysian + bid + male + state + comorb, 
+                 data = c19_df)
+```
+
+Check the output
+
+```{r}
+tidy(lm_results)
+```
+
+Pretty simple right!
+
+#### Univariate logistic regression
+
+The function [`glm()`](https://rdrr.io/r/stats/glm.html) from the **stats** package (part of **base** R) is used to fit Generalized Linear Models (GLM). [`glm()`](https://rdrr.io/r/stats/glm.html) can be used for univariate and multivariable logistic regression (e.g. to get Odds Ratios). Here are the core parts:
+
+-   `formula =` The model is provided to [`glm()`](https://rdrr.io/r/stats/glm.html) as an equation, with the outcome on the left and explanatory variables on the right of a tilde `~`.
+
+-   `family =` This determines the type of model to run. For logistic regression, use `family = "binomial"`, for poisson use `family = "poisson"`. Other examples are in the table below.
+
+-   `data =` Specify your data frame
+
+If necessary, you can also specify the link function via the syntax `family = familytype(link = "linkfunction"))`. You can read more in the documentation about other families and optional arguments such as `weights =` and `subset =` ([`?glm`](https://rdrr.io/r/stats/glm.html)).
+
+| Family               | Default link function                        |
+|----------------------|----------------------------------------------|
+| `"binomial"`         | `(link = "logit")`                           |
+| `"gaussian"`         | `(link = "identity")`                        |
+| `"Gamma"`            | `(link = "inverse")`                         |
+| `"inverse.gaussian"` | `(link = "1/mu^2")`                          |
+| `"poisson"`          | `(link = "log")`                             |
+| `"quasi"`            | `(link = "identity", variance = "constant")` |
+| `"quasibinomial"`    | `(link = "logit")`                           |
+| `"quasipoisson"`     | `(link = "log")`                             |
+
+When running [`glm()`](https://rdrr.io/r/stats/glm.html) it is most common to save the results as a named R object. Then you can print the results to your console using [`summary()`](https://rdrr.io/r/base/summary.html) as shown below, or perform other operations on the results (e.g. exponentiate). If you need to run a negative binomial regression you can use the **MASS** package; the `glm.nb()` uses the same syntax as [`glm()`](https://rdrr.io/r/stats/glm.html). For a walk-through of different regressions, see the [UCLA stats page](https://stats.idre.ucla.edu/other/dae/). So lets try to run a logistic regression model first:
+
+```{r}
+model <- glm(malaysian ~ age_cat, family = "binomial", data = c19_df)
+summary(model)
+```
+
+Can you spot a potential issue in the summary above?
+
+```{r}
+c19_df %>% 
+  mutate(age_cat = fct_relevel(age_cat, "Less than 20", after = 0)) %>% 
+  glm(formula = malaysian ~ age_cat, family = "binomial") %>% 
+  summary()
+```
+
+Lets clean that up so we have a nice exponentiated and round up the hyper precise output:
+
+```{r}
+model <- glm(malaysian ~ age_cat, family = "binomial", data = c19_df) %>% 
+  tidy(exponentiate = TRUE, conf.int = TRUE) %>%        # exponentiate and produce CIs
+  mutate(across(where(is.numeric), round, digits = 2))  # round all numeric columns
+model
+```
+
+#### Multivariable logistic regression
+
+The expressions utilised are exactly the same as in the multivariable linear regression model
+
+```{r, warning=FALSE}
+log_reg <- glm(malaysian ~ age_cat + bid + comorb + male + state, 
+               family = "binomial", data = c19_df)
+
+tidy(log_reg, exponentiate = TRUE, conf.int = TRUE)
+```
+
+If you want to include two variables and an interaction between them you can separate them with an asterisk `*` instead of a `+`. Separate them with a colon `:` if you are only specifying the interaction. For example:
+
+```{r, warning=FALSE}
+log_intrx_reg <- glm(malaysian ~ age_cat*bid + comorb + male + state, 
+               family = "binomial", data = c19_df)
+
+tidy(log_reg, exponentiate = TRUE, conf.int = TRUE)
+```
+
+### Model building
+
+You can build your model step-by-step, saving various models that include certain explanatory variables. You can compare these models with likelihood-ratio tests using `lrtest()` from the package **lmtest**, as below:
+
+```{r}
+model1 <- glm(malaysian ~ age_cat, family = "binomial", data = c19_df)
+model2 <- glm(malaysian ~ age_cat + bid, family = "binomial", data = c19_df)
+
+lmtest::lrtest(model1, model2)
+```
+
+If you prefer to instead leverage the computation available within you processor we can instead take the model object and apply the [`step()`](https://rdrr.io/r/stats/step.html) function from the **stats** package. Specify which variable selection direction you want use when building the model.
+
+```{r}
+## choose a model using forward selection based on AIC
+## you can also do "backward" or "both" by adjusting the direction
+final_log_reg <- log_reg %>%
+  step(direction = "both", trace = FALSE)
+```
+
+Check the best fitting models based on both a backward and forward method
+
+```{r, warning=FALSE}
+log_tab_base <- final_log_reg %>% 
+  broom::tidy(exponentiate = TRUE, conf.int = TRUE) %>%  ## get a tidy dataframe of estimates 
+  mutate(across(where(is.numeric), round, digits = 2))          ## round 
+
+#check
+log_tab_base
+```
+
+### `gtsummary()` and regression
+
+My favourite package again. The **gtsummary** package provides the `tbl_regression()` function, which will take the outputs from a regression ([`glm()`](https://rdrr.io/r/stats/glm.html) in this case) and produce an nice summary table.
+
+```{r}
+## show results table of final regression 
+mv_tab <- tbl_regression(final_log_reg, exponentiate = TRUE)
+
+#check
+mv_tab
+```
+
+Its so good! But it doesn't end there. `tbl_uvregression()` from the **gtsummary** package produces a table of univariate regression results. We select only the necessary columns from the `linelist` (explanatory variables and the outcome variable) and pipe them into `tbl_uvregression()`. We are going to run univariate regression on each of the columns we defined as `explanatory_vars` in the data
+
+Within the function itself, we provide the `method =` as `glm` (no quotes), the `y =` outcome column (`outcome`), specify to `method.args =` that we want to run logistic regression via `family = binomial`, and we tell it to exponentiate the results.
+
+The output is HTML and contains the counts
+
+```{r, warning=FALSE}
+## define variables of interest 
+explanatory_vars <- c("bid", "male", "comorb", "age_cat", "state")#lets leave state ut to increase the computation
+
+#cteate a data subset and run the regression
+univ_tab <- c19_df %>% 
+  dplyr::select(explanatory_vars, malaysian) %>% ## select variables of interest
+
+  tbl_uvregression(                         ## produce univariate table
+    method = glm,                           ## define regression want to run (generalised linear model)
+    y = malaysian,                            ## define outcome variable
+    method.args = list(family = binomial),  ## define what type of glm want to run (logistic)
+    exponentiate = TRUE                     ## exponentiate to produce odds ratios (rather than log odds)
+  )
+
+## view univariate results table 
+univ_tab
+```
+
+Now for some magic
+
+```{r}
+## combine with univariate results 
+mv_merge <- tbl_merge(
+  tbls = list(univ_tab, mv_tab),                          # combine
+  tab_spanner = c("**Univariate**", "**Multivariable**")) # set header names
+
+#check
+mv_merge
+```
+
+One final piece of magic! We can export our publication ready regression table into a document. Lovely!
+
+```{r, eval=FALSE}
+mv_merge %>%
+  as_flex_table() %>%
+  flextable::save_as_docx(path = "regression.docx")
+```
+
+![](/images/blown.gif)
+
+### Model evaluation in r using the `performance()` and `car()`
+
+Lets just run through quickly how we can evaluate linear and logistics models in R.
+
+#### Linear model evaluation
+
+**Linearity and Homoscedasticity:** These can be checked using a residuals vs fitted values plot.
+
+For linearity, we expect to see no pattern or curve in the points, while for homoscedasticity, we expect the spread of residuals to be approximately constant across all levels of the independent variables.
+
+```{r, eval=FALSE}
+check_model(lm_results)
+```
+
+**Normality of residuals:** This can be checked using a QQ plot.
+
+If the residuals are normally distributed, the points in the QQ plot will generally follow the straight line.
+
+```{r, eval=FALSE}
+check_normality(model)
+```
+
+**Independence of residuals (No autocorrelation):** This can be checked using the Durbin-Watson test.
+
+If the test statistic is approximately 2, it indicates no autocorrelation.
+
+```{r, eval=FALSE}
+check_autocorrelation(model)
+```
+
+**No multicollinearity:** This can be checked using Variance Inflation Factor (VIF).
+
+A VIF value greater than 5 (some suggest 10) might indicate problematic multicollinearity.
+
+```{r, eval=FALSE}
+check_collinearity(model)
+```
+
+#### Logistic model evaluation
+
+**Binary Outcome:** Logistic regression requires the dependent variable to be binary or ordinal in ordinal logistic regression.
+
+**Observation Independence:** Observations should be independent of each other. This is more of a study design issue than something you would check with a statistical test.
+
+**No Multicollinearity:** Just like in linear regression, the independent variables should not be highly correlated with each other.
+
+Just like in linear regression, a rule of thumb is that if the VIF is greater than 5 (or sometimes 10), then the multicollinearity is high.
+
+```{r, eval=FALSE}
+# Checking for Multicollinearity:
+check_collinearity(mv_model)
+```
+
+**Linearity of Log Odds:** While logistic regression does not assume linearity of the relationship between the independent variables and the dependent variable, it does assume linearity of independent variables and the log odds.
+
+**Checking for Linearity of Log Odds:**
+
+Logistic regression assumes that the log odds of the outcome is a linear combination of the independent variables. This is a complex assumption to check, but one approach is to look for significant interactions between your predictors and the log odds.
+
+First, fit a model that allows for the possibility of a non-linear relationship:
+
+```{r, eval=FALSE}
+logit_model_2 <- glm(outcome ~ predictor + I(predictor^2), family=binomial, data=df)
+```
+
+Then compare this model with your original model:
+
+```{r, eval=FALSE}
+anova(logit_model, logit_model_2, test="Chisq")
+```
+
+If the model with the quadratic term is significantly better than the model without (i.e., p \< 0.05), this could be a sign that the assumption of linearity of the log odds has been violated.
+
+### Acknowledgements
+
+Material for this lecture was borrowed and adopted from
+
+-   [The Epidemiologist R Handbook](https://epirhandbook.com/en/index.html)
+
+-   <https://rafalab.github.io/dsbook>
+
+    ![](/images/bing-bang-boom-snapping.gif)

@@ -2,16 +2,54 @@ project:
   type: website
 
 website:
-  title: "StatsComputingR_sbdr2023"
+  title: "Statistical Computing in R 2023"
+  description: "Workshop website Statistical Computing in R (Beginner to Intermediate)"
   navbar:
-    left:
-      - href: index.qmd
-        text: Home
-      - about.qmd
+    right:
+      - text: "Home"
+        file: index.qmd
+      - text: "Lectures"
+        menu:
+        - text: "Introduction"
+          href: introduction_R.qmd
+        - text: "Data Wranggling"
+          href: data_wranggling.qmd
+        - text: "Data Visualisation"
+          href: data_viz.qmd
+        - text: "Inferential Statistics"
+          href: inferential_stats.qmd
+        - text: "Regression"
+          href: regression.qmd
+      - text: "Tutorials"
+        menu: 
+        - text: "Data Wranggling"
+          href: data_wranggling_tutorial.qmd
+        - text: "Data Visualisation"
+          href: data_viz_tutorial.qmd
+        - text: "Inferential Statistics"
+          href: inferential_stats_tutorial.qmd
+        - text: "Regression"
+          href: regression_tutorial.qmd
+      - text: "Solutions"
+        menu: 
+        - text: "Data Wranggling"
+          href: data_wranggling_solutions.qmd
+        - text: "Data Visualisation"
+          href: data_viz_solutions.qmd
+        - text: "Inferential Statistics"
+          href: inferential_stats_solutions.qmd
+        - text: "Regression"
+          href: regression_solutions.qmd
+      - icon: github
+        href: https://github.com/vivekjason
+      - icon: twitter
+        href: https://twitter.com/vivekjason87
+      - icon: rss
+        href: index.xml
 
 format:
   html:
-    theme: cosmo
+    theme: minty
     css: styles.css
     toc: true
 

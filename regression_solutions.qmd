@@ -1,0 +1,165 @@
+---
+title: "Practical Statistics 4: Progression to Regression: An Introduction Regression"
+format: html
+editor: visual
+---
+
+### COVID-19 Vaccinations and Death in Malaysia
+
+```{r, include=FALSE}
+#load packages
+required_packages <- c("tidyverse", "lubridate", "gtsummary", "broom", "performance", "see", "flextable", "stats", "car")
+not_installed <- required_packages[!(required_packages %in% installed.packages()[ , "Package"])]    
+if(length(not_installed)) install.packages(not_installed)                                           
+suppressWarnings(lapply(required_packages, require, character.only = TRUE))
+
+#load data
+c19_df <- read.csv("https://raw.githubusercontent.com/MoH-Malaysia/covid19-public/main/epidemic/linelist/linelist_deaths.csv")
+```
+
+### **Task 1: Univariate Linear Regression**
+
+Question: Perform a univariate linear regression to predict "age" using the "male" variable.
+
+Steps:
+
+1.  Install and load the required packages: tidyverse and broom.
+
+2.  Filter the dataset to remove missing values in the "age" and "male" columns.
+
+3.  Fit a univariate linear regression model using the `lm()` function.
+
+4.  Summarise the model using `tidy()` from the broom package.
+
+Solution:
+
+```{r}
+# Step 1
+#install.packages(c("tidyverse", "broom"))
+library(tidyverse)
+library(broom)
+
+# Step 2
+c19_df <- c19_df %>% filter(!is.na(age), !is.na(male))
+
+# Step 3
+model <- lm(age ~ male, data = c19_df)
+
+# Step 4
+tidy(model)
+```
+
+### **Task 2: Multivariate Linear Regression**
+
+Question: Perform a multivariate linear regression to predict "age" using the "male" and "malaysian" variables.
+
+Steps:
+
+1.  Filter the dataset to remove missing values in the relevant columns.
+
+2.  Fit a multivariate linear regression model using the `lm()` function.
+
+3.  Summarise the model using `gtsummary()`.
+
+4.  Save the output as a document
+
+Solution:
+
+```{r, eval=FALSE}
+# Step 1
+c19_df <- c19_df %>% filter(!is.na(age), !is.na(male), !is.na(malaysian))
+
+# Step 2
+model <- lm(age ~ male + malaysian, data = c19_df)
+
+# Step 3
+model %>% 
+  tbl_regression() %>%
+  as_flex_table() %>%
+  flextable::save_as_docx(path = "regression.docx")
+```
+
+### **Task 3: Univariate Logistic Regression**
+
+Question: Perform a univariate logistic regression to predict "male" (binarize to 0 and 1) using the "age" variable.
+
+Steps:
+
+1.  Filter the dataset to remove missing values in the relevant columns.
+
+2.  Fit a univariate logistic regression model using the `glm()` function, specifying the family as "binomial".
+
+3.  Summarise the model using `tidy()`.
+
+Solution:
+
+```{r}
+# Step 1
+c19_df <- c19_df %>% filter(!is.na(age), !is.na(male))
+
+# Step 2
+model <- glm(male ~ age, data = c19_df, family = "binomial")
+
+# Step 3
+tidy(model)
+```
+
+### **Task 4: Multivariate Logistic Regression**
+
+Question: Perform a multivariate logistic regression to predict "male" using the "age" and "malaysian" variables.
+
+Steps:
+
+1.  Filter the dataset to remove missing values in the relevant columns.
+
+2.  Fit a multivariate logistic regression model using the `glm()` function, specifying the family as "binomial".
+
+3.  Summarise the model using `gtsummary()`.
+
+4.  Save the output as a document
+
+Solution:
+
+```{r, eval=FALSE}
+# Step 1
+c19_df <- c19_df %>% filter(!is.na(age), !is.na(male), !is.na(malaysian))
+
+# Step 2
+model <- glm(male ~ age + malaysian, data = c19_df, family = "binomial")
+
+# Step 3
+model %>%
+  tbl_regression(exponentiate = TRUE) %>%
+  as_flex_table() %>%
+  flextable::save_as_docx(path = "regression.docx")
+```
+
+### **Task 5: Model Evaluation**
+
+Question: Evaluate the logistic regression model from Task 4 using AUC-ROC.
+
+Steps:
+
+1.  Install and load the pROC package (Note: Upon up the documentation to figure out the nuts and bolts.)
+
+2.  Use the predict() function to get the predicted probabilities from the logistic regression model.
+
+3.  Use the roc() function to compute the AUC-ROC.
+
+Solution:
+
+```{r}
+# Step 1
+#install.packages("pROC")
+library(pROC)
+
+# Step 2
+probabilities <- predict(model, type = "response")
+
+# Step 3
+roc_obj <- roc(c19_df$male, probabilities)
+
+# Display AUC
+auc(roc_obj)
+
+```
