@@ -18,7 +18,7 @@ As we mentioned in the Introduction- there are many ways to skin a cat in R.
 
 ### `tidyverse()` for Describing data
 
-As we learned yesterday- the tidyverse has revolutionised data wranggling and can be extended likewise into the realm of descriptive statistics. Creating tables with **dplyr** functions [`summarise()`](https://dplyr.tidyverse.org/reference/summarise.html) and [`count()`](https://dplyr.tidyverse.org/reference/count.html) is a useful approach to calculating summary statistics, summarize *by group*, or pass tables to [`ggplot()`](https://ggplot2.tidyverse.org/reference/ggplot.html) or `flextable()`. In yesterdays tutorial we briefly did visit this, but we will extend on this in the next 10 minutes or so before transitioning into a simpler more efficient way of describing data in R.
+As we learned yesterday- the tidyverse has revolutionised data wrangling and can be extended likewise into the realm of descriptive statistics. Creating tables with **dplyr** functions [`summarise()`](https://dplyr.tidyverse.org/reference/summarise.html) and [`count()`](https://dplyr.tidyverse.org/reference/count.html) is a useful approach to calculating summary statistics, summarize *by group*, or pass tables to [`ggplot()`](https://ggplot2.tidyverse.org/reference/ggplot.html) or `flextable()`. In yesterdays tutorial we briefly did visit this, but we will extend on this in the next 10 minutes or so before transitioning into a simpler more efficient way of describing data in R.
 
 Lets get some important packages loaded
 

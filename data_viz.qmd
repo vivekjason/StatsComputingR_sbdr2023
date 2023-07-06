@@ -80,7 +80,7 @@ suppressWarnings(lapply(required_packages, require, character.only = TRUE))
 
 #### Importing some data
 
-For the purposes of this session lets utilise the Malaysian COVID-19 deaths linelinest maintained by the Ministry of Health on their [Github page](https://github.com/MoH-Malaysia). Codes for each column are as follows:
+For the purposes of this session lets utilise the Malaysian COVID-19 deaths linelists maintained by the Ministry of Health on their [Github page](https://github.com/MoH-Malaysia). Codes for each column are as follows:
 
 1.  `date`: yyyy-mm-dd format; date of death
 
@@ -736,7 +736,7 @@ Plenty of other really powerful viz to consider and we will hopefully get to cov
 
 -   Demographic pyramids
 
--   Likert Scalesm
+-   Likert Scales
 
 -   Diagrams - Sankey
 

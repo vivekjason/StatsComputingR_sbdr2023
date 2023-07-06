@@ -1,5 +1,5 @@
 ---
-title: "Practical session 1: Untangling Data with Tidyverse: Data wranggling in R"
+title: "Practical session 1: Untangling Data with Tidyverse: Data wrangling in R"
 format: html
 editor: visual
 ---

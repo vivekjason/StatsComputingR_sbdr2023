@@ -44,7 +44,7 @@ The 2-day workshop as you can imagine is very short. While, we do not assume a s
 
 3.  Know some basics of at least one programming language
 
-While we will be covering very briefly some basic of R and setuping up your environment, we will not be able to spend significant time covering these concepts and technologies. Data analyses you will perform will also often involve significant data extraction, cleaning, and transformation. We will learn about tools to do all of this, but hopefully most of this sounds familiar to you so you can focus on the concepts we will be teaching around best practices for statistical computing.
+While we will be covering very briefly some basic of R and setting up your environment, we will not be able to spend significant time covering these concepts and technologies. Data analyses you will perform will also often involve significant data extraction, cleaning, and transformation. We will learn about tools to do all of this, but hopefully most of this sounds familiar to you so you can focus on the concepts we will be teaching around best practices for statistical computing.
 
 ::: callout-tip
 Some resources that may be useful if you feel you may be missing pieces of this background:
